@@ -1,6 +1,11 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
@@ -16,50 +21,98 @@ import org.springframework.web.bind.annotation.RestController;
 import com.evenjoin.diet_ms.entity.Diet;
 import com.evenjoin.diet_ms.services.DietSvc;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
+
 @RefreshScope
 @RestController
 @RequestMapping("/diet")
 public class DietCtrl {
 
+	private static final Logger logger = LoggerFactory.getLogger(DietCtrl.class);
+
 	@Autowired
 	private DietSvc dietSvc;
-	
-	//Get all diets
+
+	// Get all diets
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "dietBreaker")
 	@GetMapping("/all")
 	@ResponseStatus(code = HttpStatus.OK)
-	private List<Diet> getDiets() {
-		return dietSvc.getDiets();
+	public CompletableFuture<List<Diet>> getDiets() {
+		return CompletableFuture.supplyAsync(() -> dietSvc.getDiets());
 	}
-	
-	//Get a diet
+
+	// Get a diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "dietBreaker")
 	@GetMapping("/{idDiet}")
 	@ResponseStatus(code = HttpStatus.OK)
-	private Diet getDiet(@PathVariable Long idDiet) {
-		return dietSvc.getDiet(idDiet);
+	public CompletableFuture<Diet> getDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> dietSvc.getDiet(idDiet));
 	}
-	
-	//Add a diet
+
+	// Add a diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "dietBreaker")
 	@PostMapping("/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
-	private Diet addDiet(@RequestBody Diet diet) {
-		return dietSvc.addDiet(diet);
+	public CompletableFuture<Diet> addDiet(@RequestBody Diet diet) {
+		return CompletableFuture.supplyAsync(() -> dietSvc.addDiet(diet));
 	}
-	
-	//Update a diet
+
+	// Update a diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "dietBreaker")
 	@PutMapping("/update/{idDiet}")
 	@ResponseStatus(code = HttpStatus.OK)
-	private Diet updateDiet(@RequestBody Diet diet, @PathVariable Long idDiet) {
-		Diet currentDiet = dietSvc.getDiet(idDiet);
-		currentDiet.setDate(diet.getDate());
-		currentDiet.setTimeMinute(diet.getTimeMinute());
-		return dietSvc.addDiet(currentDiet);
+	public CompletableFuture<Diet> updateDiet(@RequestBody Diet diet, @PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			Diet currentDiet = dietSvc.getDiet(idDiet);
+			currentDiet.setDate(diet.getDate());
+			currentDiet.setTimeMinute(diet.getTimeMinute());
+			return dietSvc.addDiet(currentDiet);
+		});
 	}
-	
-	//Delete a diet
+
+	// Delete a diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getVoidCB")
+	@TimeLimiter(name = "dietBreaker")
 	@DeleteMapping("/{idDiet}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	private void deleteDiet(@PathVariable Long idDiet) {
-		dietSvc.deleteDiet(idDiet);
+	public CompletableFuture<Void> deleteDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.runAsync(() -> dietSvc.deleteDiet(idDiet));
 	}
-	
+
+	// (CircuitBreaker) Get void circuit breaker
+	public CompletableFuture<Void> getVoidCB(Throwable t) {
+		return CompletableFuture.runAsync(() -> logger.error("Enabled diet breaker" + t));
+	}
+
+	// (CircuitBreaker) Get object circuit breaker
+	public CompletableFuture<Diet> getObjectCB(Throwable t) {
+		logger.error("Enabled diet breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Diet diet = new Diet();
+			diet.setIdDite(null);
+			diet.setDate(null);
+			diet.setTimeMinute(0);
+			return diet;
+		});
+	}
+
+	// (CircuitBreaker) Get list object circuit breaker
+	public CompletableFuture<List<Diet>> getListObjectCB(Throwable t) {
+		logger.error("Enabled diet breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Diet diet = new Diet();
+			List<Diet> list = new ArrayList<Diet>();
+			diet.setIdDite(null);
+			diet.setDate(null);
+			diet.setTimeMinute(0);
+			list.add(diet);
+			return list;
+		});
+	}
+
 }

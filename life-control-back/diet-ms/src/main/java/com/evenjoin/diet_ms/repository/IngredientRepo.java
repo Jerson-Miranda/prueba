@@ -47,7 +47,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			    "WHEN :nutrient = 'trans' THEN nf.trans " +
 			    "WHEN :nutrient = 'fiber' THEN nf.fiber " +
 			    "WHEN :nutrient = 'sodium' THEN nf.sodium " +
-			    "ELSE 0 END DESC NULLS LAST"
+			    "ELSE 0 END DESC " +
+			    "LIMIT 1"
 	)
 	public Ingredient getIngredientWithMaxNutrient(@Param("nutrient") String nutrient);
 	
@@ -67,7 +68,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			    "WHEN :nutrient = 'trans' THEN nf.trans " +
 			    "WHEN :nutrient = 'fiber' THEN nf.fiber " +
 			    "WHEN :nutrient = 'sodium' THEN nf.sodium " +
-			    "ELSE 0 END ASC NULLS LAST"
+			    "ELSE 0 END ASC " +
+			    "LIMIT 1"
 	)
 	public Ingredient getIngredientWithMinNutrient(@Param("nutrient") String nutrient);
 	
