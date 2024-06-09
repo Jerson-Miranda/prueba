@@ -15,6 +15,18 @@ resilience4j:
         base-config: default
       ingredientBreaker:
         base-config: default
+      nutritionalFactBreaker:
+        base-config: default
+      pantryBreaker:
+        base-config: default
+      recipeBookBreaker:
+        base-config: default
+      subcategoryBreaker:
+        base-config: default
+      typeIngredientBreaker:
+        base-config: default
+      variantIngredientBreaker:
+        base-config: default
   timelimiter:
     configs:
       default:
@@ -25,4 +37,16 @@ resilience4j:
       dietBreaker:
         base-config: default
       ingredientBreaker:
+        base-config: default
+      nutritionalFactBreaker:
+        base-config: default
+      pantryBreaker:
+        base-config: default
+      recipeBookBreaker:
+        base-config: default
+      subcategoryBreaker:
+        base-config: default
+      typeIngredientBreaker:
+        base-config: default
+      variantIngredientBreaker:
         base-config: default
