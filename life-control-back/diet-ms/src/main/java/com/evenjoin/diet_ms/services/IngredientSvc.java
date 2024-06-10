@@ -71,4 +71,10 @@ public class IngredientSvc implements IIngredientSvc {
 		return ingredientRepo.getQuantityToConsume(idIngredient);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<Ingredient> getIngredientsByRecipe(Long idRecipeBook) {
+		return ingredientRepo.getIngredientsByRecipe(idRecipeBook);
+	}
+
 }

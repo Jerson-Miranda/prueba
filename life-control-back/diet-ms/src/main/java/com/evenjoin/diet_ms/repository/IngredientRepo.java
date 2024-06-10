@@ -82,4 +82,14 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	)
 	public BigDecimal getQuantityToConsume(@Param("idIngredient") Long idIngredient);
 	
+	//Get ingredients by recipe
+	@Query(
+			"SELECT i " +
+			"FROM Ingredient i " +
+			"JOIN RecipeBookIngredient rbi ON rbi.idIngredient = i.idIngredient " +
+			"JOIN RecipeBook rb.idRecipeBook = rbi.idRecipeBook " +
+			"WHERE rb.idRecipeBook = :idRecipeBook"
+	)
+	public List<Ingredient> getIngredientsByRecipe(@Param("idRecipeBook") Long idRecipeBook);
+	
 }

@@ -145,6 +145,15 @@ public class IngredientCtrl {
 		});
 	}
 	
+	// Get ingredients by recipe
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/recipe-book/{idRecipeBook}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Ingredient>> getIngredientsByRecipe(@PathVariable Long idRecipeBook) {
+		return CompletableFuture.supplyAsync(()-> ingredientSvc.getIngredientsByRecipe(idRecipeBook));
+	}
+	
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled ingredient breaker" + t));
