@@ -86,8 +86,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN RecipeBookIngredient rbi ON rbi.idIngredient = i.idIngredient " +
-			"JOIN RecipeBook rb.idRecipeBook = rbi.idRecipeBook " +
+			"JOIN RecipeBookIngredient rbi ON i.idIngredient = rbi.ingredient.idIngredient " +
+			"JOIN RecipeBook rb ON rbi.recipebook.idRecipeBook = rb.idRecipeBook " +
 			"WHERE rb.idRecipeBook = :idRecipeBook"
 	)
 	public List<Ingredient> getIngredientsByRecipe(@Param("idRecipeBook") Long idRecipeBook);
