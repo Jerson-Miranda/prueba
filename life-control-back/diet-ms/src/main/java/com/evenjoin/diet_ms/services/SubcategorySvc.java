@@ -42,7 +42,7 @@ public class SubcategorySvc implements ISubcategorySvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Object[]> getSubcategoriesByOwner(String owner) {
-		return subcategoryRepo.getSubcategoriesByOwner(owner);
+	public List<Subcategory> getSubcategoriesByRecipeBook(Long idRecipeBook) {
+		return subcategoryRepo.getSubcategoriesByRecipeBook(idRecipeBook);
 	}
 }

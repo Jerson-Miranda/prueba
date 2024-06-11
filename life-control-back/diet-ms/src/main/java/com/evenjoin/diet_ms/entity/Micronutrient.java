@@ -14,19 +14,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "subcategory")
-public class Subcategory {
+@Table(name = "micronutrient")
+public class Micronutrient {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_subcategory")
-	private Long idSubcategory;
-	
-	@Column(length = 100, nullable = false)
-	private String name;
+	@Column(name = "id_micronutrient")
+	private Long idMicronutrient;
 	
 	@ManyToOne
-	@JoinColumn(name = "category", nullable = false)
-	private Category category;
+	@JoinColumn(name = "vitamin", nullable = false)
+	private Vitamin vitamin;
+	
+	@ManyToOne
+	@JoinColumn(name = "mineral", nullable = false)
+	private Mineral mineral;
 	
 }

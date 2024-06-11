@@ -1,5 +1,6 @@
 package com.evenjoin.diet_ms.entity;
 
+import java.time.LocalTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,19 +15,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "subcategory")
-public class Subcategory {
+@Table(name = "schedule_diet")
+public class ScheduleDiet {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_subcategory")
-	private Long idSubcategory;
+	@Column(name = "id_schedule_diet")
+	private Long idScheduleDite;
 	
-	@Column(length = 100, nullable = false)
-	private String name;
+	@Column(nullable = false, unique = true)
+	private LocalTime time;
+	
+	@Column(name = "is_checked", nullable = false)
+	private Boolean isChecked;
 	
 	@ManyToOne
-	@JoinColumn(name = "category", nullable = false)
-	private Category category;
+	@JoinColumn(name = "diet", nullable = false)
+	private Diet diet;
+	
+	@ManyToOne
+	@JoinColumn(name = "recipe", nullable = false)
+	private Recipe recipe;
 	
 }

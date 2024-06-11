@@ -15,11 +15,11 @@ resilience4j:
         base-config: default
       ingredientBreaker:
         base-config: default
-      nutritionalFactBreaker:
+      macronutrientBreaker:
         base-config: default
       pantryBreaker:
         base-config: default
-      recipeBookBreaker:
+      recipeBreaker:
         base-config: default
       subcategoryBreaker:
         base-config: default
@@ -38,11 +38,11 @@ resilience4j:
         base-config: default
       ingredientBreaker:
         base-config: default
-      nutritionalFactBreaker:
+      macronutrientBreaker:
         base-config: default
       pantryBreaker:
         base-config: default
-      recipeBookBreaker:
+      recipeBreaker:
         base-config: default
       subcategoryBreaker:
         base-config: default

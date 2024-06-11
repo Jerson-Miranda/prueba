@@ -85,22 +85,12 @@ public class SubcategoryCtrl {
 		return CompletableFuture.runAsync(() -> subcategorySvc.deleteSubcategory(idSubcategory));
 	}
 
-	// Get subcategories by owner
+	// Get subcategories by recipe book
 	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getListMapCB")
 	@TimeLimiter(name = "subcategoryBreaker")
-	@GetMapping("/subcategory/owner/{owner}")
-	public CompletableFuture<List<Map<String, Object>>> getSubcategoriesbyOwner(@PathVariable String owner) {
-		return CompletableFuture.supplyAsync(() -> {
-			List<Object[]> response = subcategorySvc.getSubcategoriesByOwner(owner);
-			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
-			for (Object[] res : response) {
-				Map<String, Object> jsonObject = new HashMap<String, Object>();
-				jsonObject.put("idSubcategory", res[0]);
-				jsonObject.put("name", res[1]);
-				json.add(jsonObject);
-			}
-			return json;
-		});
+	@GetMapping("/subcategory/recipe-book/{idRecipeBook}")
+	public CompletableFuture<List<Subcategory>> getSubcategoriesbyRecipeBook(@PathVariable Long idRecipeBook) {
+		return CompletableFuture.supplyAsync(() -> subcategorySvc.getSubcategoriesByRecipeBook(idRecipeBook));
 	}
 
 	// (CircuitBreaker) Get void circuit breaker

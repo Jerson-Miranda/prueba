@@ -35,18 +35,18 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.nutritionalFact nf " +
+			"JOIN i.macronutrient ma " +
 			"ORDER BY CASE " +
-				"WHEN :nutrient = 'kcal' THEN nf.kcal " +
-			    "WHEN :nutrient = 'protein' THEN nf.protein " +
-			    "WHEN :nutrient = 'carbohydrate' THEN nf.carbohydrate " +
-			    "WHEN :nutrient = 'sugar' THEN nf.sugar " +
-			    "WHEN :nutrient = 'addedSugar' THEN nf.addedSugar " +
-			    "WHEN :nutrient = 'fat' THEN nf.fat " +
-			    "WHEN :nutrient = 'saturatedFat' THEN nf.saturatedFat " +
-			    "WHEN :nutrient = 'trans' THEN nf.trans " +
-			    "WHEN :nutrient = 'fiber' THEN nf.fiber " +
-			    "WHEN :nutrient = 'sodium' THEN nf.sodium " +
+				"WHEN :nutrient = 'kcal' THEN ma.kcal " +
+			    "WHEN :nutrient = 'protein' THEN ma.protein " +
+			    "WHEN :nutrient = 'carbohydrate' THEN ma.carbohydrate " +
+			    "WHEN :nutrient = 'sugar' THEN ma.sugar " +
+			    "WHEN :nutrient = 'addedSugar' THEN ma.addedSugar " +
+			    "WHEN :nutrient = 'fat' THEN ma.fat " +
+			    "WHEN :nutrient = 'saturatedFat' THEN ma.saturatedFat " +
+			    "WHEN :nutrient = 'trans' THEN ma.trans " +
+			    "WHEN :nutrient = 'fiber' THEN ma.fiber " +
+			    "WHEN :nutrient = 'sodium' THEN ma.sodium " +
 			    "ELSE 0 END DESC " +
 			    "LIMIT 1"
 	)
@@ -56,18 +56,18 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.nutritionalFact nf " +
+			"JOIN i.macronutrient ma " +
 			"ORDER BY CASE " +
-				"WHEN :nutrient = 'kcal' THEN nf.kcal " +
-			    "WHEN :nutrient = 'protein' THEN nf.protein " +
-			    "WHEN :nutrient = 'carbohydrate' THEN nf.carbohydrate " +
-			    "WHEN :nutrient = 'sugar' THEN nf.sugar " +
-			    "WHEN :nutrient = 'addedSugar' THEN nf.addedSugar " +
-			    "WHEN :nutrient = 'fat' THEN nf.fat " +
-			    "WHEN :nutrient = 'saturatedFat' THEN nf.saturatedFat " +
-			    "WHEN :nutrient = 'trans' THEN nf.trans " +
-			    "WHEN :nutrient = 'fiber' THEN nf.fiber " +
-			    "WHEN :nutrient = 'sodium' THEN nf.sodium " +
+				"WHEN :nutrient = 'kcal' THEN ma.kcal " +
+			    "WHEN :nutrient = 'protein' THEN ma.protein " +
+			    "WHEN :nutrient = 'carbohydrate' THEN ma.carbohydrate " +
+			    "WHEN :nutrient = 'sugar' THEN ma.sugar " +
+			    "WHEN :nutrient = 'addedSugar' THEN ma.addedSugar " +
+			    "WHEN :nutrient = 'fat' THEN ma.fat " +
+			    "WHEN :nutrient = 'saturatedFat' THEN ma.saturatedFat " +
+			    "WHEN :nutrient = 'trans' THEN ma.trans " +
+			    "WHEN :nutrient = 'fiber' THEN ma.fiber " +
+			    "WHEN :nutrient = 'sodium' THEN ma.sodium " +
 			    "ELSE 0 END ASC " +
 			    "LIMIT 1"
 	)
@@ -75,9 +75,9 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	
 	//Get quantity to consume by ingredient
 	@Query(
-			"SELECT nf.portion " +
+			"SELECT ma.portion " +
 			"FROM Ingredient i " +
-			"JOIN i.nutritionalFact nf " +
+			"JOIN i.macronutrient ma " +
 			"WHERE i.idIngredient = :idIngredient"
 	)
 	public BigDecimal getQuantityToConsume(@Param("idIngredient") Long idIngredient);
@@ -86,10 +86,10 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN RecipeBookIngredient rbi ON i.idIngredient = rbi.ingredient.idIngredient " +
-			"JOIN RecipeBook rb ON rbi.recipebook.idRecipeBook = rb.idRecipeBook " +
-			"WHERE rb.idRecipeBook = :idRecipeBook"
+			"JOIN RecipeIngredient ri ON i.idIngredient = ri.ingredient.idIngredient " +
+			"JOIN Recipe r ON ri.recipe.idRecipe = r.idRecipe " +
+			"WHERE r.idRecipe = :idRecipe"
 	)
-	public List<Ingredient> getIngredientsByRecipe(@Param("idRecipeBook") Long idRecipeBook);
+	public List<Ingredient> getIngredientsByRecipe(@Param("idRecipe") Long idRecipe);
 	
 }

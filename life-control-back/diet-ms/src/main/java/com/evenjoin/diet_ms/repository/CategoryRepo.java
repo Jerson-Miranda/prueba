@@ -9,12 +9,13 @@ import feign.Param;
 
 public interface CategoryRepo extends JpaRepository<Category, Long> {
 
-	//Get categories by owner
+	//Get categories by recipe book
 	@Query(
 			"SELECT c.idCategory, c.name " +
 			"FROM Category c " +
-			"WHERE c.owner = :owner"
+			"JOIN c.recipeBook rb " +
+			"WHERE rb.idRecipeBook = :idRecipeBook"
 	)
-	public List<Object[]> getCategoriesByOwner(@Param("owner") String owner);
+	public List<Object[]> getCategoriesByRecipeBook(@Param("idRecipeBook") Long idRecipeBook);
 	
 }

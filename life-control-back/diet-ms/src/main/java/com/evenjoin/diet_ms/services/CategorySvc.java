@@ -40,9 +40,8 @@ public class CategorySvc implements ICategorySvc{
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Object[]> getCategoriesByOwner(String owner) {
-		return categoryRepo.getCategoriesByOwner(owner);
+	public List<Object[]> getCategoriesByRecipeBook(Long idRecipeBook) {
+		return categoryRepo.getCategoriesByRecipeBook(idRecipeBook);
 	}
 
 }

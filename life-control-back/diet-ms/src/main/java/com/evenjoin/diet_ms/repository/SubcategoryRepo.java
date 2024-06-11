@@ -11,13 +11,14 @@ import feign.Param;
 
 public interface SubcategoryRepo extends JpaRepository<Subcategory, Long> {
 
-	//Get subcategories by owner
+	//Get subcategories by recipe book
 	@Query(
-			"SELECT sc.idSubcategory, sc.name " +
+			"SELECT sc " +
 			"FROM Subcategory sc " +
 			"JOIN sc.category c " +
-			"WHERE c.owner = :owner"
+			"JOIN c.recipeBook rb " +
+			"WHERE rb.idRecipeBook = :idRecipeBook"
 	)
-	public List<Object[]> getSubcategoriesByOwner(@Param("owner") String owner);
+	public List<Subcategory> getSubcategoriesByRecipeBook(@Param("idRecipeBook") Long idRecipeBook);
 	
 }

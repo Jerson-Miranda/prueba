@@ -29,7 +29,7 @@ public class Ingredient {
 	@Column(length = 50, nullable = false)
 	private String brand;
 	
-	@Column(nullable = false)
+	@Column(length = 100, nullable = false)
 	private String name;
 	
 	@Lob
@@ -41,15 +41,19 @@ public class Ingredient {
 	private String description;
 	
 	@ManyToOne
-	@JoinColumn(name = "nutritional_fact", nullable = false)
-	private NutritionalFact nutritionalFact;
+	@JoinColumn(name = "macronutrient", nullable = false)
+	private Macronutrient macronutrient;
 	
 	@ManyToOne
-	@JoinColumn(name = "subcategory", nullable = false)
-	private Subcategory subcategory;
+	@JoinColumn(name = "micronutrient", nullable = false)
+	private Micronutrient micronutrient;
 	
 	@ManyToOne
 	@JoinColumn(name = "type_ingredient", nullable = false)
 	private TypeIngredient typeIngredient;
+	
+	@ManyToOne
+	@JoinColumn(name = "subcategory", nullable = false)
+	private Subcategory subcategory;
 	
 }

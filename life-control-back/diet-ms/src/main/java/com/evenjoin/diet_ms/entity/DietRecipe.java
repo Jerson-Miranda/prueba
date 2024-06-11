@@ -1,6 +1,6 @@
 package com.evenjoin.diet_ms.entity;
 
-import com.evenjoin.diet_ms.entity.embedded.DietRecipeBookId;
+import com.evenjoin.diet_ms.entity.embedded.DietRecipeId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -15,11 +15,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "diet_recipebook")
-public class DietRecipeBook {
+@Table(name = "diet_recipe")
+public class DietRecipe {
 	
 	@EmbeddedId
-	private DietRecipeBookId id;
+	private DietRecipeId id;
 	
 	@ManyToOne
 	@MapsId("idDiet")
@@ -27,9 +27,9 @@ public class DietRecipeBook {
 	private Diet diet;
 	
 	@ManyToOne
-	@MapsId("idRecipeBook")
-	@JoinColumn(name = "id_recipe_book", nullable = false)
-	private RecipeBook recipeBook;
+	@MapsId("idRecipe")
+	@JoinColumn(name = "id_recipe", nullable = false)
+	private Recipe recipe;
 
 	@Column(nullable = false)
 	private int portion;

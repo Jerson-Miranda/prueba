@@ -70,7 +70,6 @@ public class DietCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Diet currentDiet = dietSvc.getDiet(idDiet);
 			currentDiet.setDate(diet.getDate());
-			currentDiet.setTimeMinute(diet.getTimeMinute());
 			return dietSvc.addDiet(currentDiet);
 		});
 	}
@@ -96,7 +95,6 @@ public class DietCtrl {
 			Diet diet = new Diet();
 			diet.setIdDite(null);
 			diet.setDate(null);
-			diet.setTimeMinute(0);
 			return diet;
 		});
 	}
@@ -109,7 +107,6 @@ public class DietCtrl {
 			List<Diet> list = new ArrayList<Diet>();
 			diet.setIdDite(null);
 			diet.setDate(null);
-			diet.setTimeMinute(0);
 			list.add(diet);
 			return list;
 		});

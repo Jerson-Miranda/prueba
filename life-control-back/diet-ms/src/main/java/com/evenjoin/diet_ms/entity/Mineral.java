@@ -14,44 +14,63 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "nutritional_fact")
-public class NutritionalFact {
+@Table(name = "mineral")
+public class Mineral {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_nutricional_fact")
-	private Long idNutricionalFact;
+	@Column(name = "id_mineral")
+	private Long idMineral;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal kcal;
+	private BigDecimal calcium;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal protein;
-	
+	private BigDecimal phosphorus;
+
 	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal carbohydrate;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal sugar;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal addedSugar;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal fat;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal saturatedFat;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal trans;
-	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal fiber;
+	private BigDecimal potassium;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal sodium;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal portion;
+	private BigDecimal chloride;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal magnesium;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal sulfur;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal iron;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal zinc;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal copper;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal manganese;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal iodine;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal selenium;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal molybdenum;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal cobalt;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal fluoride;
+	
+	@Column(nullable = false, precision = 10, scale = 2)
+	private BigDecimal chromium;
+	
 }

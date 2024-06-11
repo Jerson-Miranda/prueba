@@ -79,9 +79,10 @@ public class IngredientCtrl {
 			currentIngredient.setName(ingredient.getName());
 			currentIngredient.setPhoto(ingredient.getPhoto());
 			currentIngredient.setDescription(ingredient.getDescription());
-			currentIngredient.setNutritionalFact(ingredient.getNutritionalFact());
-			currentIngredient.setSubcategory(ingredient.getSubcategory());
+			currentIngredient.setMicronutrient(ingredient.getMicronutrient());
+			currentIngredient.setMacronutrient(ingredient.getMacronutrient());
 			currentIngredient.setTypeIngredient(ingredient.getTypeIngredient());
+			currentIngredient.setSubcategory(ingredient.getSubcategory());
 			return ingredientSvc.addIngredient(currentIngredient);
 		});
 	}
@@ -148,7 +149,7 @@ public class IngredientCtrl {
 	// Get ingredients by recipe
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/recipe-book/{idRecipeBook}")
+	@GetMapping("/ingredient/recipe/{idRecipeBook}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Ingredient>> getIngredientsByRecipe(@PathVariable Long idRecipeBook) {
 		return CompletableFuture.supplyAsync(()-> ingredientSvc.getIngredientsByRecipe(idRecipeBook));
@@ -170,9 +171,10 @@ public class IngredientCtrl {
 			ingredient.setName(null);
 			ingredient.setPhoto(null);
 			ingredient.setDescription(null);
-			ingredient.setNutritionalFact(null);
-			ingredient.setSubcategory(null);
+			ingredient.setMacronutrient(null);
+			ingredient.setMicronutrient(null);
 			ingredient.setTypeIngredient(null);
+			ingredient.setSubcategory(null);
 			return ingredient;
 		});
 	}
@@ -189,9 +191,10 @@ public class IngredientCtrl {
 			ingredient.setName(null);
 			ingredient.setPhoto(null);
 			ingredient.setDescription(null);
-			ingredient.setNutritionalFact(null);
-			ingredient.setSubcategory(null);
+			ingredient.setMacronutrient(null);
+			ingredient.setMicronutrient(null);
 			ingredient.setTypeIngredient(null);
+			ingredient.setSubcategory(null);
 			list.add(ingredient);
 			return list;
 		});
@@ -208,9 +211,10 @@ public class IngredientCtrl {
 			jsonObject.put("name", null);
 			jsonObject.put("photo", null);
 			jsonObject.put("description", null);
-			jsonObject.put("nutritionalFact", null);
-			jsonObject.put("subcategory", null);
+			jsonObject.put("macronutrient", null);
+			jsonObject.put("micronutrient", null);
 			jsonObject.put("typeIngredient", null);
+			jsonObject.put("subcategory", null);
 			return jsonObject;
 		});
 	}

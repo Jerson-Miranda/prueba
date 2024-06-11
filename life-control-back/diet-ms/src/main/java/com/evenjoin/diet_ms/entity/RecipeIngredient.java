@@ -1,6 +1,6 @@
 package com.evenjoin.diet_ms.entity;
 
-import com.evenjoin.diet_ms.entity.embedded.RecipeBookIngredientId;
+import com.evenjoin.diet_ms.entity.embedded.RecipeIngredientId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -15,16 +15,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "recipebook_ingredient")
-public class RecipeBookIngredient {
+@Table(name = "recipe_ingredient")
+public class RecipeIngredient {
 
 	@EmbeddedId
-	private RecipeBookIngredientId id;
+	private RecipeIngredientId id;
 	
 	@ManyToOne
-	@MapsId("idRecipeBook")
-	@JoinColumn(name = "id_recipe_book", nullable = false)
-	private RecipeBook recipebook;
+	@MapsId("idRecipe")
+	@JoinColumn(name = "id_recipe", nullable = false)
+	private Recipe recipe;
 	
 	@ManyToOne
 	@MapsId("idIngredient")

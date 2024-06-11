@@ -9,5 +9,5 @@ public interface ICategorySvc {
 	public Category getCategory(Long idCategory);
 	public Category addCategory(Category category);
 	public void deleteCategory(Long idCategory);
-	public List<Object[]> getCategoriesByOwner(String owner);
+	public List<Object[]> getCategoriesByRecipeBook(Long idRecipeBook);
 }

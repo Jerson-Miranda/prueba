@@ -10,25 +10,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-public class RecipeBookIngredientId implements Serializable {
+public class DietRecipeId implements Serializable {
 
-	private Long idRecipeBook;
-	private Long idIngredient;
+	private Long idDiet;
+	private Long idRecipe;
 	
 	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RecipeBookIngredientId that = (RecipeBookIngredientId) o;
-        return Objects.equals(idRecipeBook, that.idRecipeBook) &&
-                Objects.equals(idIngredient, that.idIngredient);
+        DietRecipeId that = (DietRecipeId) o;
+        return Objects.equals(idDiet, that.idDiet) &&
+                Objects.equals(idRecipe, that.idRecipe);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idRecipeBook, idIngredient);
+        return Objects.hash(idDiet, idRecipe);
     }
-	
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = 1L;
 }

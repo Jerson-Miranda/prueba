@@ -71,7 +71,7 @@ public class CategoryCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Category currentCategory = categorySvc.getCategory(idCategory);
 			currentCategory.setName(category.getName());
-			currentCategory.setOwner(category.getOwner());
+			currentCategory.setRecipeBook(category.getRecipeBook());
 			return categorySvc.addCategory(currentCategory);
 		});
 	}
@@ -88,11 +88,11 @@ public class CategoryCtrl {
 	// Get categories by owner
 	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getListMapCB")
 	@TimeLimiter(name = "categoryBreaker")
-	@GetMapping("/category/owner/{owner}")
+	@GetMapping("/category/recipe-book/{idRecipeBook}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<List<Map<String, Object>>> getCategoriesByOwner(@PathVariable String owner) {
+	public CompletableFuture<List<Map<String, Object>>> getCategoriesByRecipeBook(@PathVariable Long idRecipeBook) {
 		return CompletableFuture.supplyAsync(() -> {
-			List<Object[]> response = categorySvc.getCategoriesByOwner(owner);
+			List<Object[]> response = categorySvc.getCategoriesByRecipeBook(idRecipeBook);
 			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
 			for (Object[] res : response) {
 				Map<String, Object> jsonObject = new HashMap<String, Object>();
@@ -116,7 +116,7 @@ public class CategoryCtrl {
 			Category category = new Category();
 			category.setIdCategory(null);
 			category.setName(null);
-			category.setOwner(null);
+			category.setRecipeBook(null);
 			return category;
 		});
 	}
@@ -129,7 +129,7 @@ public class CategoryCtrl {
 			List<Category> list = new ArrayList<Category>();
 			category.setIdCategory(null);
 			category.setName(null);
-			category.setOwner(null);
+			category.setRecipeBook(null);
 			list.add(category);
 			return list;
 		});

@@ -20,7 +20,7 @@ public class TypeIngredient {
 	@Column(name = "id_type_ingredient")
 	private Long idTypeIngredient;
 	
-	@Column(length = 15, nullable = false)
+	@Column(length = 20, nullable = false)
 	private String name;
 	
 }

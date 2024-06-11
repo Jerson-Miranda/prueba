@@ -24,8 +24,8 @@ public class VariantIngredient {
 	@Column(name = "id_variant_ingredient")
 	private Long idVariantIngredient;
 	
-	@Column(name = "gr_ml_pza", nullable = false)
-	private Long grMlPza;
+	@Column(name = "gr_ml_pza", nullable = false, precision = 10, scale = 2)
+	private BigDecimal grMlPza;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal price;

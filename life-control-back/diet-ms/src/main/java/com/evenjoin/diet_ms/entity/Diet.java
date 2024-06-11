@@ -25,7 +25,4 @@ public class Diet {
 	@Column(nullable = false, unique = true)
 	private Date date;
 	
-	@Column(name = "time_minute", nullable = false)
-	private int timeMinute;
-	
 }
