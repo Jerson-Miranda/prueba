@@ -32,7 +32,7 @@ public class MacronutrientCtrl {
 	@Autowired
 	private MacronutrientSvc macronutrientSvc;
 
-	// Get all macronutrient
+	// Get all macronutrients
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
 	@GetMapping("/macronutrient/all")
@@ -90,6 +90,15 @@ public class MacronutrientCtrl {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public CompletableFuture<Void> deleteMacronutrient(@PathVariable Long idMacronutrient) {
 		return CompletableFuture.runAsync(() -> macronutrientSvc.deleteMacronutrient(idMacronutrient));
+	}
+	
+	// Get macronutrients by ingredient
+	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "macronutrientBreaker")
+	@GetMapping("/macronutrient/ingredient/{idIngredient}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Macronutrient> getMacronutrientsByIngredient(@PathVariable Long idIngredient) {
+		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrientsByIngredient(idIngredient));
 	}
 
 	// (CircuitBreaker) Get void circuit breaker

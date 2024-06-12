@@ -1,7 +1,9 @@
 package com.evenjoin.diet_ms.controllers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +83,19 @@ public class TypeIngredientCtrl {
 	public CompletableFuture<Void> deleteTypeIngredient(@PathVariable Long idTypeIngredient) {
 		return CompletableFuture.runAsync(() -> typeIngredientSvc.deleteTypeIngredient(idTypeIngredient));
 	}
+	
+	// Count type ingredients
+	@CircuitBreaker(name = "typeIngredientBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "typeIngredientBreaker")
+	@DeleteMapping("/type-ingredient/count")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countTypeIngredients() {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", typeIngredientSvc.countTypeIngredients());
+			return jsonObject;
+		});
+	}
 
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
@@ -108,6 +123,16 @@ public class TypeIngredientCtrl {
 			typeIngredient.setName(null);
 			list.add(typeIngredient);
 			return list;
+		});
+	}
+	
+	// (CircuitBreaker) Get list map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled type ingredient breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", null);
+			return jsonObject;
 		});
 	}
 }

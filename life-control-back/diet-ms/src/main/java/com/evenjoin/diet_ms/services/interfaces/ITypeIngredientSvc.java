@@ -10,5 +10,6 @@ public interface ITypeIngredientSvc {
 	public TypeIngredient getTypeIngredient(Long idTypeIngredient);
 	public TypeIngredient addTypeIngredient(TypeIngredient typeIngredient);
 	public void deleteTypeIngredient(Long idTypeIngredient);
+	public Integer countTypeIngredients();
 	
 }

@@ -39,10 +39,23 @@ public class SubcategorySvc implements ISubcategorySvc {
 	public void deleteSubcategory(Long idSubcategory) {
 		subcategoryRepo.deleteById(idSubcategory);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Integer countSubcategories() {
+		return subcategoryRepo.countSubcategories();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Subcategory> getSubcategoriesByRecipeBook(Long idRecipeBook) {
 		return subcategoryRepo.getSubcategoriesByRecipeBook(idRecipeBook);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Subcategory> getSubcategoriesByCategory(Long idCategory) {
+		return subcategoryRepo.getSubcategoriesByCategory(idCategory);
+	}
+	
 }

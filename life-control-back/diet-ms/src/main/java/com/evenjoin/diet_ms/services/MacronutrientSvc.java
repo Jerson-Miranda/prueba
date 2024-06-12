@@ -39,4 +39,10 @@ public class MacronutrientSvc implements IMacronutrientSvc {
 	public void deleteMacronutrient(Long idMacronutrient) {
 		macronutrientRepo.deleteById(idMacronutrient);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Macronutrient getMacronutrientsByIngredient(Long idIngredient) {
+		return macronutrientRepo.getMacronutrientsByIngredient(idIngredient);
+	}
 }

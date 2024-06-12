@@ -1,5 +1,6 @@
 package com.evenjoin.diet_ms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +40,15 @@ public class PantrySvc implements IPantrySvc {
 	public void deletePantry(Long idPantry) {
 		pantryRepo.deleteById(idPantry);
 	}
+
+	@Override
+	public Date getExpirationDateByIngredient(String barcode) {
+		return pantryRepo.getExpirationDateByIngredient(barcode);
+	}
+
+	@Override
+	public Integer getStockByIngredient(String barcode) {
+		return pantryRepo.getStockByIngredient(barcode);
+	}
+	
 }

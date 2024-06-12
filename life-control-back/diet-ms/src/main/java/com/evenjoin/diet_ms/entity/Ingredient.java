@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -23,22 +22,11 @@ public class Ingredient {
 	@Column(name = "id_ingredient")
 	private Long idIngredient;
 	
-	@Column(length = 15, nullable = false, unique = true)
-	private String barcode;
-	
 	@Column(length = 50, nullable = false)
 	private String brand;
 	
 	@Column(length = 100, nullable = false)
 	private String name;
-	
-	@Lob
-	@Column(nullable = false)
-	private String photo;
-	
-	@Lob
-	@Column(nullable = false)
-	private String description;
 	
 	@ManyToOne
 	@JoinColumn(name = "macronutrient", nullable = false)
@@ -47,10 +35,6 @@ public class Ingredient {
 	@ManyToOne
 	@JoinColumn(name = "micronutrient", nullable = false)
 	private Micronutrient micronutrient;
-	
-	@ManyToOne
-	@JoinColumn(name = "type_ingredient", nullable = false)
-	private TypeIngredient typeIngredient;
 	
 	@ManyToOne
 	@JoinColumn(name = "subcategory", nullable = false)

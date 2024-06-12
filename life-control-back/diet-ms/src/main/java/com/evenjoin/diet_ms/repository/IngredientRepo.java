@@ -12,15 +12,12 @@ import feign.Param;
 
 public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 
-	//Get ingredients by category
+	//Count ingredients
 	@Query(
-			"SELECT i " +
-			"FROM Ingredient i " +
-			"JOIN i.subcategory sc " +
-			"JOIN sc.category c " +
-			"WHERE c.idCategory = :idCategory"
+			"SELECT COUNT(i) " +
+			"FROM Ingredient i"
 	)
-	public List<Ingredient> getIngredientsByCategory(@Param("idCategory") Long idCategory);
+	public Integer countIngredients();
 	
 	//Get ingredients by subcategory
 	@Query(
@@ -30,6 +27,16 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"WHERE sc.idSubcategory = :idSubcategory"
 	)
 	public List<Ingredient> getIngredientsBySubcategory(@Param("idSubcategory") Long idSubcategory);
+	
+	//Get ingredients by category
+	@Query(
+			"SELECT i " +
+			"FROM Ingredient i " +
+			"JOIN i.subcategory sc " +
+			"JOIN sc.category c " +
+			"WHERE c.idCategory = :idCategory"
+	)
+	public List<Ingredient> getIngredientsByCategory(@Param("idCategory") Long idCategory);
 	
 	//Get ingredient with maximum nutrient
 	@Query(
@@ -52,7 +59,7 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	)
 	public Ingredient getIngredientWithMaxNutrient(@Param("nutrient") String nutrient);
 	
-	//Get ingredient with maximum nutrient
+	//Get ingredient with minimum nutrient
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +

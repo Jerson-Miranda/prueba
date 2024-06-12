@@ -40,4 +40,10 @@ public class TypeIngredientSvc implements ITypeIngredientSvc {
 		typeIngredientRepo.deleteById(idTypeIngredient);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Integer countTypeIngredients() {
+		return typeIngredientRepo.countTypeIngredients();
+	}
+
 }

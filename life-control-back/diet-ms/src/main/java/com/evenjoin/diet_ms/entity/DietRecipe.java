@@ -32,6 +32,6 @@ public class DietRecipe {
 	private Recipe recipe;
 
 	@Column(nullable = false)
-	private int portion;
+	private Integer portion;
 	
 }

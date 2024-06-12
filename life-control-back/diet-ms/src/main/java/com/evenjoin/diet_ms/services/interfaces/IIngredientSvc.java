@@ -10,6 +10,7 @@ public interface IIngredientSvc {
 	public Ingredient getIngredient(Long idIngredient);
 	public Ingredient addIngredient(Ingredient ingredient);
 	public void deleteIngredient(Long idIngredient);
+	public Integer countIngredients();
 	public List<Ingredient> getIngredientsByCategory(Long IdCategory);
 	public List<Ingredient> getIngredientsBySubcategory(Long IdSubcategory);
 	public Ingredient getIngredientWithMaxNutrient(String nutrient);

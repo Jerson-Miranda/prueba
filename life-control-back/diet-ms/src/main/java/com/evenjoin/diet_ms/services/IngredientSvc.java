@@ -40,6 +40,12 @@ public class IngredientSvc implements IIngredientSvc {
 	public void deleteIngredient(Long idIngredient) {
 		ingredientRepo.deleteById(idIngredient);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Integer countIngredients() {
+		return ingredientRepo.countIngredients();
+	}
 
 	@Override
 	@Transactional(readOnly = true)

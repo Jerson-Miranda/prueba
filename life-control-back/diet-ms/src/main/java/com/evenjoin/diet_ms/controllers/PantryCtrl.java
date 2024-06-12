@@ -1,7 +1,10 @@
 package com.evenjoin.diet_ms.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +85,33 @@ public class PantryCtrl {
 	public CompletableFuture<Void> deletePantry(@PathVariable Long idPantry) {
 		return CompletableFuture.runAsync(() -> pantrySvc.deletePantry(idPantry));
 	}
-
+	
+	// Get expiration date by ingredient
+	@CircuitBreaker(name = "pantryBreaker", fallbackMethod = "getMapDateCB")
+	@TimeLimiter(name = "pantryBreaker")
+	@GetMapping("/pantry/expiration-date/{barcode}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Date>> getExpirationDateByIngredient(@PathVariable String barcode) {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Date> jsonObject = new HashMap<String, Date>(); 
+			jsonObject.put("expiration-date", pantrySvc.getExpirationDateByIngredient(barcode));
+			return jsonObject;
+		});
+	}
+	
+	// Get stock by ingredient
+	@CircuitBreaker(name = "pantryBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "pantryBreaker")
+	@GetMapping("/pantry/stock/{barcode}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> getStockByIngredient(@PathVariable String barcode) {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>(); 
+			jsonObject.put("stock", pantrySvc.getStockByIngredient(barcode));
+			return jsonObject;
+		});
+	}
+	
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled pantry breaker" + t));
@@ -113,6 +142,26 @@ public class PantryCtrl {
 			pantry.setIngredient(null);
 			list.add(pantry);
 			return list;
+		});
+	}
+	
+	// (CircuitBreaker) Get map date circuit breaker
+	public CompletableFuture<Map<String, Date>> getMapDateCB(Throwable t) {
+		logger.error("Enabled pantry breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Date> jsonObject = new HashMap<String, Date>();
+			jsonObject.put("expiration-date", null);
+			return jsonObject;
+		});
+	}
+	
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled pantry breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("stock", null);
+			return jsonObject;
 		});
 	}
 }

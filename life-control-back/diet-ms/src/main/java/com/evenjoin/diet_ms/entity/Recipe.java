@@ -35,7 +35,10 @@ public class Recipe {
 	private String photo;
 
 	@Column(name = "time_minute", nullable = false)
-	private int timeMinute;
+	private Integer timeMinute;
+	
+	@Column(name = "is_favorite", nullable = false)
+	private Boolean isFavorite;
 	
 	@ManyToOne
 	@JoinColumn(name = "subcategory", nullable = false)

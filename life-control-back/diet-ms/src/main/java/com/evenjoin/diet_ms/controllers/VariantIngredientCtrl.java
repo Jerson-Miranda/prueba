@@ -68,8 +68,13 @@ public class VariantIngredientCtrl {
 			@RequestBody VariantIngredient variantIngredient, @PathVariable Long idVariantIngredient) {
 		return CompletableFuture.supplyAsync(() -> {
 			VariantIngredient currentVariantIngredient = variantIngredientSvc.getVariantIngredient(idVariantIngredient);
+			currentVariantIngredient.setBarcode(variantIngredient.getBarcode());
+			currentVariantIngredient.setPhoto(variantIngredient.getPhoto());
+			currentVariantIngredient.setDescription(variantIngredient.getDescription());
 			currentVariantIngredient.setGrMlPza(variantIngredient.getGrMlPza());
 			currentVariantIngredient.setPrice(variantIngredient.getPrice());
+			currentVariantIngredient.setIsFavorite(variantIngredient.getIsFavorite());
+			currentVariantIngredient.setTypeIngredient(variantIngredient.getTypeIngredient());
 			currentVariantIngredient.setIngredient(variantIngredient.getIngredient());
 			return variantIngredientSvc.addVariantIngredient(currentVariantIngredient);
 		});
@@ -83,6 +88,15 @@ public class VariantIngredientCtrl {
 	public CompletableFuture<Void> deleteVariantIngredient(@PathVariable Long idVariantIngredient) {
 		return CompletableFuture.runAsync(() -> variantIngredientSvc.deleteVariantIngredient(idVariantIngredient));
 	}
+	
+	// Get variant ingredients by minimum stock
+	@CircuitBreaker(name = "variantIngredientBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "variantIngredientBreaker")
+	@GetMapping("/variant-ingredient/stock-min/{stock}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<VariantIngredient>> getIngredientsByMinStock(@PathVariable Integer stock) {
+		return CompletableFuture.supplyAsync(() -> variantIngredientSvc.getIngredientsByMinStock(stock));
+	}
 
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
@@ -95,8 +109,13 @@ public class VariantIngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			VariantIngredient variantIngredient = new VariantIngredient();
 			variantIngredient.setIdVariantIngredient(null);
+			variantIngredient.setBarcode(null);
+			variantIngredient.setPhoto(null);
+			variantIngredient.setDescription(null);
 			variantIngredient.setGrMlPza(null);
 			variantIngredient.setPrice(null);
+			variantIngredient.setIsFavorite(null);
+			variantIngredient.setTypeIngredient(null);
 			variantIngredient.setIngredient(null);
 			return variantIngredient;
 		});
@@ -109,8 +128,13 @@ public class VariantIngredientCtrl {
 			List<VariantIngredient> list = new ArrayList<VariantIngredient>();
 			VariantIngredient variantIngredient = new VariantIngredient();
 			variantIngredient.setIdVariantIngredient(null);
+			variantIngredient.setBarcode(null);
+			variantIngredient.setPhoto(null);
+			variantIngredient.setDescription(null);
 			variantIngredient.setGrMlPza(null);
 			variantIngredient.setPrice(null);
+			variantIngredient.setIsFavorite(null);
+			variantIngredient.setTypeIngredient(null);
 			variantIngredient.setIngredient(null);
 			list.add(variantIngredient);
 			return list;

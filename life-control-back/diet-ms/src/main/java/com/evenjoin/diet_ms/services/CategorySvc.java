@@ -40,8 +40,15 @@ public class CategorySvc implements ICategorySvc{
 	}
 
 	@Override
-	public List<Object[]> getCategoriesByRecipeBook(Long idRecipeBook) {
+	@Transactional(readOnly = true)
+	public List<Category> getCategoriesByRecipeBook(Long idRecipeBook) {
 		return categoryRepo.getCategoriesByRecipeBook(idRecipeBook);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public int countCategories() {
+		return categoryRepo.countCategories();
 	}
 
 }

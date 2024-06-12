@@ -32,5 +32,5 @@ public class RecipeIngredient {
 	private Ingredient ingredient;
 	
 	@Column(nullable = false)
-	private int amount;
+	private Integer amount;
 }

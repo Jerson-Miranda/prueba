@@ -10,5 +10,6 @@ public interface IMacronutrientSvc {
 	public Macronutrient getMacronutrient(Long idMacronutrient);
 	public Macronutrient addMacronutrient(Macronutrient macronutrient);
 	public void deleteMacronutrient(Long idMacronutrient);
-	
+	public Macronutrient getMacronutrientsByIngredient(Long idIngredient);
+
 }

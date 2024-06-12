@@ -71,6 +71,7 @@ public class RecipeCtrl {
 			currentRecipe.setProcedure_text(recipe.getProcedure_text());
 			currentRecipe.setPhoto(recipe.getPhoto());
 			currentRecipe.setTimeMinute(recipe.getTimeMinute());
+			currentRecipe.setIsFavorite(recipe.getIsFavorite());
 			currentRecipe.setSubcategory(recipe.getSubcategory());
 			currentRecipe.setRecipeBook(recipe.getRecipeBook());
 			return recipeSvc.addRecipe(currentRecipe);
@@ -100,7 +101,8 @@ public class RecipeCtrl {
 			recipe.setName(null);
 			recipe.setProcedure_text(null);
 			recipe.setPhoto(null);
-			recipe.setTimeMinute(0);
+			recipe.setTimeMinute(null);
+			recipe.setIsFavorite(null);
 			recipe.setSubcategory(null);
 			recipe.setRecipeBook(null);
 			return recipe;
@@ -117,7 +119,8 @@ public class RecipeCtrl {
 			recipe.setName(null);
 			recipe.setProcedure_text(null);
 			recipe.setPhoto(null);
-			recipe.setTimeMinute(0);
+			recipe.setTimeMinute(null);
+			recipe.setIsFavorite(null);
 			recipe.setSubcategory(null);
 			recipe.setRecipeBook(null);
 			list.add(recipe);

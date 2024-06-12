@@ -8,14 +8,21 @@ import com.evenjoin.diet_ms.entity.Category;
 import feign.Param;
 
 public interface CategoryRepo extends JpaRepository<Category, Long> {
+	
+	//Count categories
+	@Query(
+			"SELECT COUNT(c) " +
+			"FROM Category c"
+	)
+	public Integer countCategories();
 
 	//Get categories by recipe book
 	@Query(
-			"SELECT c.idCategory, c.name " +
+			"SELECT c " +
 			"FROM Category c " +
 			"JOIN c.recipeBook rb " +
 			"WHERE rb.idRecipeBook = :idRecipeBook"
 	)
-	public List<Object[]> getCategoriesByRecipeBook(@Param("idRecipeBook") Long idRecipeBook);
+	public List<Category> getCategoriesByRecipeBook(@Param("idRecipeBook") Long idRecipeBook);
 	
 }

@@ -11,6 +11,13 @@ import feign.Param;
 
 public interface SubcategoryRepo extends JpaRepository<Subcategory, Long> {
 
+	//Count subcategories
+	@Query(
+			"SELECT COUNT(sc) " +
+			"FROM Subcategory sc"
+	)
+	public Integer countSubcategories();
+		
 	//Get subcategories by recipe book
 	@Query(
 			"SELECT sc " +
@@ -20,5 +27,14 @@ public interface SubcategoryRepo extends JpaRepository<Subcategory, Long> {
 			"WHERE rb.idRecipeBook = :idRecipeBook"
 	)
 	public List<Subcategory> getSubcategoriesByRecipeBook(@Param("idRecipeBook") Long idRecipeBook);
+	
+	//Get subcategories by category
+	@Query(
+			"SELECT sc " +
+			"FROM Subcategory sc " +
+			"JOIN sc.category c " +
+			"WHERE c.idCategory = :idCategory"
+	)
+	public List<Subcategory> getSubcategoriesByCategory(@Param("idCategory") Long idCategory);
 	
 }

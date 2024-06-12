@@ -74,14 +74,10 @@ public class IngredientCtrl {
 			@PathVariable Long idIngredient) {
 		return CompletableFuture.supplyAsync(() -> {
 			Ingredient currentIngredient = ingredientSvc.getIngredient(idIngredient);
-			currentIngredient.setBarcode(ingredient.getBarcode());
 			currentIngredient.setBrand(ingredient.getBrand());
 			currentIngredient.setName(ingredient.getName());
-			currentIngredient.setPhoto(ingredient.getPhoto());
-			currentIngredient.setDescription(ingredient.getDescription());
 			currentIngredient.setMicronutrient(ingredient.getMicronutrient());
 			currentIngredient.setMacronutrient(ingredient.getMacronutrient());
-			currentIngredient.setTypeIngredient(ingredient.getTypeIngredient());
 			currentIngredient.setSubcategory(ingredient.getSubcategory());
 			return ingredientSvc.addIngredient(currentIngredient);
 		});
@@ -94,6 +90,19 @@ public class IngredientCtrl {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public CompletableFuture<Void> deleteIngredient(@PathVariable Long idIngredient) {
 		return CompletableFuture.runAsync(() -> ingredientSvc.deleteIngredient(idIngredient));
+	}
+	
+	// Count ingredients
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/count")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countIngredients(){
+		return CompletableFuture.supplyAsync(()-> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", ingredientSvc.countIngredients());
+			return jsonObject;
+		});
 	}
 
 	// Get ingredients by category
@@ -117,7 +126,7 @@ public class IngredientCtrl {
 	// Get ingredient with maximum nutrient
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/max/{nutrient}")
+	@GetMapping("/ingredient/nutrient-max/{nutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Ingredient> getIngredientWithMaxNutrient(@PathVariable String nutrient) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientWithMaxNutrient(nutrient));
@@ -126,14 +135,14 @@ public class IngredientCtrl {
 	// Get ingredient with minimum nutrient
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/min/{nutrient}")
+	@GetMapping("/ingredient/nutrient-min/{nutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Ingredient> getIngredientWithMinNutrient(@PathVariable String nutrient) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientWithMinNutrient(nutrient));
 	}
 
 	// Get quantity to consume by ingredient
-	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getMapCB")
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getMapDecimalCB")
 	@TimeLimiter(name = "ingredientBreaker")
 	@GetMapping("/ingredient/quantity/{idIngredient}")
 	@ResponseStatus(code = HttpStatus.OK)
@@ -166,14 +175,10 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Ingredient ingredient = new Ingredient();
 			ingredient.setIdIngredient(null);
-			ingredient.setBarcode(null);
 			ingredient.setBrand(null);
 			ingredient.setName(null);
-			ingredient.setPhoto(null);
-			ingredient.setDescription(null);
 			ingredient.setMacronutrient(null);
 			ingredient.setMicronutrient(null);
-			ingredient.setTypeIngredient(null);
 			ingredient.setSubcategory(null);
 			return ingredient;
 		});
@@ -186,35 +191,37 @@ public class IngredientCtrl {
 			Ingredient ingredient = new Ingredient();
 			List<Ingredient> list = new ArrayList<Ingredient>();
 			ingredient.setIdIngredient(null);
-			ingredient.setBarcode(null);
 			ingredient.setBrand(null);
 			ingredient.setName(null);
-			ingredient.setPhoto(null);
-			ingredient.setDescription(null);
 			ingredient.setMacronutrient(null);
 			ingredient.setMicronutrient(null);
-			ingredient.setTypeIngredient(null);
 			ingredient.setSubcategory(null);
 			list.add(ingredient);
 			return list;
 		});
 	}
 	
-	// (CircuitBreaker) Get map circuit breaker
-	public CompletableFuture<Map<String, BigDecimal>> getMapCB(Throwable t) {
-		logger.error("Enabled category breaker " + t);
+	// (CircuitBreaker) Get map decimal circuit breaker
+	public CompletableFuture<Map<String, BigDecimal>> getMapDecimalCB(Throwable t) {
+		logger.error("Enabled ingredient breaker " + t);
 		return CompletableFuture.supplyAsync(() -> {
 			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
 			jsonObject.put("idIngredient", null);
-			jsonObject.put("barcode", null);
 			jsonObject.put("brand", null);
 			jsonObject.put("name", null);
-			jsonObject.put("photo", null);
-			jsonObject.put("description", null);
 			jsonObject.put("macronutrient", null);
 			jsonObject.put("micronutrient", null);
-			jsonObject.put("typeIngredient", null);
 			jsonObject.put("subcategory", null);
+			return jsonObject;
+		});
+	}
+	
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled ingredient breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", null);
 			return jsonObject;
 		});
 	}

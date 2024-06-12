@@ -84,23 +84,28 @@ public class CategoryCtrl {
 	public CompletableFuture<Void> deleteCategory(@PathVariable Long idCategory) {
 		return CompletableFuture.runAsync(() -> categorySvc.deleteCategory(idCategory));
 	}
-
-	// Get categories by owner
-	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getListMapCB")
+	
+	// Count categories
+	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "categoryBreaker")
+	@GetMapping("/category/count")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countCategories(){
+		return CompletableFuture.supplyAsync(()-> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", categorySvc.countCategories());
+			return jsonObject;
+		});
+	}
+	
+	// Get categories by recipe book
+	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "categoryBreaker")
 	@GetMapping("/category/recipe-book/{idRecipeBook}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<List<Map<String, Object>>> getCategoriesByRecipeBook(@PathVariable Long idRecipeBook) {
+	public CompletableFuture<List<Category>> getCategoriesByRecipeBook(@PathVariable Long idRecipeBook) {
 		return CompletableFuture.supplyAsync(() -> {
-			List<Object[]> response = categorySvc.getCategoriesByRecipeBook(idRecipeBook);
-			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
-			for (Object[] res : response) {
-				Map<String, Object> jsonObject = new HashMap<String, Object>();
-				jsonObject.put("idCategory", res[0]);
-				jsonObject.put("name", res[1]);
-				json.add(jsonObject);
-			}
-			return json;
+			return categorySvc.getCategoriesByRecipeBook(idRecipeBook);
 		});
 	}
 
@@ -135,17 +140,13 @@ public class CategoryCtrl {
 		});
 	}
 
-	// (CircuitBreaker) Get list map circuit breaker
-	public CompletableFuture<List<Map<String, Object>>> getListMapCB(Throwable t) {
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
 		logger.error("Enabled category breaker " + t);
 		return CompletableFuture.supplyAsync(() -> {
-			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
-			Map<String, Object> jsonObject = new HashMap<String, Object>();
-			jsonObject.put("idCategory", null);
-			jsonObject.put("name", null);
-			jsonObject.put("owner", null);
-			json.add(jsonObject);
-			return json;
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", null);
+			return jsonObject;
 		});
 	}
 

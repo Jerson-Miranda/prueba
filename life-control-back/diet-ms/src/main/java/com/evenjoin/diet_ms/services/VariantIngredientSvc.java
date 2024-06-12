@@ -40,5 +40,11 @@ public class VariantIngredientSvc implements IVariantIngredientSvc {
 	public void deleteVariantIngredient(Long idVariantIngredient) {
 		variantIngredientRepo.deleteById(idVariantIngredient);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<VariantIngredient> getIngredientsByMinStock(Integer stock) {
+		return variantIngredientRepo.getIngredientsByMinStock(stock);
+	}
 	
 }

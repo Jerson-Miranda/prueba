@@ -9,6 +9,8 @@ public interface ISubcategorySvc {
 	public Subcategory getSubcategory(Long idSubcategory);
 	public Subcategory addSubcategory(Subcategory subcategory);
 	public void deleteSubcategory(Long idSubcategory);
+	public Integer countSubcategories();
 	public List<Subcategory> getSubcategoriesByRecipeBook(Long idRecipeBook);
+	public List<Subcategory> getSubcategoriesByCategory(Long idCategory);
 	
 }

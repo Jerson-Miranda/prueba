@@ -84,13 +84,36 @@ public class SubcategoryCtrl {
 	public CompletableFuture<Void> deleteSubcategory(@PathVariable Long idSubcategory) {
 		return CompletableFuture.runAsync(() -> subcategorySvc.deleteSubcategory(idSubcategory));
 	}
+	
+	// Count subcategories
+	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "subcategoryBreaker")
+	@GetMapping("/subcategory/count")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countSubcategories(){
+		return CompletableFuture.supplyAsync(()-> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", subcategorySvc.countSubcategories());
+			return jsonObject;
+		});
+	}
 
 	// Get subcategories by recipe book
-	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getListMapCB")
+	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "subcategoryBreaker")
 	@GetMapping("/subcategory/recipe-book/{idRecipeBook}")
+	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Subcategory>> getSubcategoriesbyRecipeBook(@PathVariable Long idRecipeBook) {
 		return CompletableFuture.supplyAsync(() -> subcategorySvc.getSubcategoriesByRecipeBook(idRecipeBook));
+	}
+
+	// Get subcategories by category
+	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "subcategoryBreaker")
+	@GetMapping("/subcategory/category/{idCategory}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Subcategory>> getSubcategoriesbyCategory(@PathVariable Long idCategory) {
+		return CompletableFuture.supplyAsync(() -> subcategorySvc.getSubcategoriesByCategory(idCategory));
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -123,18 +146,14 @@ public class SubcategoryCtrl {
 			return list;
 		});
 	}
-
-	// (CircuitBreaker) Get list map circuit breaker
-	public CompletableFuture<List<Map<String, Object>>> getListMapCB(Throwable t) {
-		logger.error("Enabled subcategory breaker" + t);
+	
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled subcategory breaker " + t);
 		return CompletableFuture.supplyAsync(() -> {
-			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
-			Map<String, Object> jsonObject = new HashMap<String, Object>();
-			jsonObject.put("idSubcategory", null);
-			jsonObject.put("name", null);
-			jsonObject.put("category", null);
-			json.add(jsonObject);
-			return json;
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", null);
+			return jsonObject;
 		});
 	}
 
