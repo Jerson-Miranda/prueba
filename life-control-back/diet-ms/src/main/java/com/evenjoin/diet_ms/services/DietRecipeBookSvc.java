@@ -1,15 +1,15 @@
 package com.evenjoin.diet_ms.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.evenjoin.diet_ms.repository.DietRecipeRepo;
+// import com.evenjoin.diet_ms.repository.DietRecipeRepo;
 import com.evenjoin.diet_ms.services.interfaces.IDietRecipeBookSvc;
 
 @Service
 public class DietRecipeBookSvc implements IDietRecipeBookSvc {
 	
-	@Autowired
-	private DietRecipeRepo dietRepositoryBookRepo;
+	// @Autowired
+	// private DietRecipeRepo dietRepositoryBookRepo;
 	
 }
