@@ -10,14 +10,12 @@ import feign.Param;
 public interface VitaminRepo extends JpaRepository<Vitamin, Long> {
 
 	// Get vitamins by ingredient
-	@Query(
-			"SELECT v " +
+	@Query("SELECT v " +
 			"FROM Vitamin v " +
 			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
 			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
-			"WHERE i.barcode = :barcode"
-	)
+			"WHERE i.barcode = :barcode")
 	public Vitamin getVitaminsByIngredient(@Param("barcode") String barcode);
-	
+
 }

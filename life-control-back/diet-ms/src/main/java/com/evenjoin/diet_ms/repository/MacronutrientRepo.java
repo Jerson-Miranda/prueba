@@ -10,13 +10,11 @@ import feign.Param;
 public interface MacronutrientRepo extends JpaRepository<Macronutrient, Long> {
 
 	// Get macronutrients by ingredient
-	@Query(
-			"SELECT ma " +
+	@Query("SELECT ma " +
 			"FROM Macronutrient ma " +
 			"JOIN CommonIngredient ci ON ci.macronutrient.idMacronutrient = ma.idMacronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
-			"WHERE i.barcode = :barcode"
-	)
+			"WHERE i.barcode = :barcode")
 	public Macronutrient getMacronutrientsByIngredient(@Param("barcode") String barcode);
-	
+
 }

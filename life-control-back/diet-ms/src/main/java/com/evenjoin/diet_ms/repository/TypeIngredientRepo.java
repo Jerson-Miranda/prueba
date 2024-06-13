@@ -7,11 +7,9 @@ import com.evenjoin.diet_ms.entity.TypeIngredient;
 
 public interface TypeIngredientRepo extends JpaRepository<TypeIngredient, Long> {
 
-	//Count type ingredients
-	@Query(
-			"SELECT COUNT(ti) " +
-			"FROM TypeIngredient ti"
-	)
+	// Count type ingredients
+	@Query("SELECT COUNT(ti) " +
+			"FROM TypeIngredient ti")
 	public Integer countTypeIngredients();
-	
+
 }

@@ -9,14 +9,12 @@ import com.evenjoin.diet_ms.entity.Pantry;
 import feign.Param;
 
 public interface PantryRepo extends JpaRepository<Pantry, Long> {
-	
-	//Get stock and expiration date by ingredient
-	@Query(
-			"SELECT p.stock, p.expirationDate " +
+
+	// Get stock and expiration date by ingredient
+	@Query("SELECT p.stock, p.expirationDate " +
 			"FROM Pantry p " +
 			"JOIN p.ingredient i " +
-			"WHERE i.barcode = :barcode"
-	)
+			"WHERE i.barcode = :barcode")
 	public List<Object> getStockEDByIngredient(@Param("barcode") String barcode);
-	
+
 }
