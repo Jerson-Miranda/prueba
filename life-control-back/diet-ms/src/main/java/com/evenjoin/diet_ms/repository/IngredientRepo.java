@@ -108,12 +108,10 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-	        "JOIN ( " +
-	        	"SELECT p.ingredient.idIngredient, SUM(p.stock) AS totalStock " +
-	        	"FROM Pantry p " +
-	        	"WHERE p.stock <= :stock " +
-	        	"GROUP BY p.ingredient.idIngredient) AS aggregatedData " +
-	        "ON i.idIngredient = aggregatedData.idIngredient")
+			"JOIN RecipeIngredient ri ON i.idIngredient = ri.ingredient.idIngredient " +
+			"JOIN Recipe r ON ri.recipe.idRecipe = r.idRecipe " +
+			"WHERE r.idRecipe = :stock"
+	)
 	public List<Ingredient> getIngredientsByMinStock(@Param("stock") Integer stock);
 	
 }
