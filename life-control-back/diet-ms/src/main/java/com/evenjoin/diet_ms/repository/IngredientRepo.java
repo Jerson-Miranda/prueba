@@ -23,7 +23,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.subcategory sc " +
+			"JOIN i.commonIngredient ci " +
+			"JOIN ci.subcategory sc " +
 			"WHERE sc.idSubcategory = :idSubcategory"
 	)
 	public List<Ingredient> getIngredientsBySubcategory(@Param("idSubcategory") Long idSubcategory);
@@ -32,7 +33,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.subcategory sc " +
+			"JOIN i.commonIngredient ci " +
+			"JOIN ci.subcategory sc " +
 			"JOIN sc.category c " +
 			"WHERE c.idCategory = :idCategory"
 	)
@@ -42,7 +44,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.macronutrient ma " +
+			"JOIN i.commonIngredient ci " +
+			"JOIN ci.macronutrient ma " +
 			"ORDER BY CASE " +
 				"WHEN :nutrient = 'kcal' THEN ma.kcal " +
 			    "WHEN :nutrient = 'protein' THEN ma.protein " +
@@ -63,7 +66,8 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	@Query(
 			"SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN i.macronutrient ma " +
+			"JOIN i.commonIngredient ci " +
+			"JOIN ci.macronutrient ma " +
 			"ORDER BY CASE " +
 				"WHEN :nutrient = 'kcal' THEN ma.kcal " +
 			    "WHEN :nutrient = 'protein' THEN ma.protein " +
@@ -83,11 +87,12 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	//Get quantity to consume by ingredient
 	@Query(
 			"SELECT ma.portion " +
-			"FROM Ingredient i " +
-			"JOIN i.macronutrient ma " +
-			"WHERE i.idIngredient = :idIngredient"
+			"FROM Macronutrient ma " +
+			"JOIN CommonIngredient ci ON ci.macronutrient.idMacronutrient = ma.idMacronutrient " +
+			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
+			"WHERE i.barcode = :barcode"
 	)
-	public BigDecimal getQuantityToConsume(@Param("idIngredient") Long idIngredient);
+	public BigDecimal getQuantityToConsume(@Param("barcode") String barcode);
 	
 	//Get ingredients by recipe
 	@Query(
@@ -98,5 +103,17 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"WHERE r.idRecipe = :idRecipe"
 	)
 	public List<Ingredient> getIngredientsByRecipe(@Param("idRecipe") Long idRecipe);
+	
+	//Get ingredients by minimum stock
+	@Query(
+			"SELECT i " +
+			"FROM Ingredient i " +
+	        "JOIN ( " +
+	        	"SELECT p.ingredient.idIngredient, SUM(p.stock) AS totalStock " +
+	        	"FROM Pantry p " +
+	        	"WHERE p.stock <= :stock " +
+	        	"GROUP BY p.ingredient.idIngredient) AS aggregatedData " +
+	        "ON i.idIngredient = aggregatedData.idIngredient")
+	public List<Ingredient> getIngredientsByMinStock(@Param("stock") Integer stock);
 	
 }

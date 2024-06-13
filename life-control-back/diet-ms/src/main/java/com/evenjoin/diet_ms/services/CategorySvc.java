@@ -38,17 +38,17 @@ public class CategorySvc implements ICategorySvc{
 	public void deleteCategory(Long idCategory) {
 		categoryRepo.deleteById(idCategory);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public int countCategories() {
+		return categoryRepo.countCategories();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public List<Category> getCategoriesByRecipeBook(Long idRecipeBook) {
 		return categoryRepo.getCategoriesByRecipeBook(idRecipeBook);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public int countCategories() {
-		return categoryRepo.countCategories();
 	}
 
 }

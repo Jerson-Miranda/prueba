@@ -29,7 +29,7 @@ public class Vitamin {
 	private BigDecimal vitaminB;
 	
 	@Column(name = "vitamin_c", nullable = false, precision = 10, scale = 2)
-	private BigDecimal vitaminCc;
+	private BigDecimal vitaminC;
 	
 	@Column(name = "vitamin_d", nullable = false, precision = 10, scale = 2)
 	private BigDecimal vitaminD;

@@ -36,7 +36,7 @@ public class RecipeBook {
 	@Column(name = "num_pages", nullable = false)
 	private int numPages;
 	
-	@Column(name = "is_favorite", nullable = false)
+	@Column(name = "is_favorite", nullable = false, columnDefinition = "TINYINT(1)")
 	private Boolean isFavorite;
 	
 }

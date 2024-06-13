@@ -42,7 +42,7 @@ public class MacronutrientSvc implements IMacronutrientSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Macronutrient getMacronutrientsByIngredient(Long idIngredient) {
-		return macronutrientRepo.getMacronutrientsByIngredient(idIngredient);
+	public Macronutrient getMacronutrientsByIngredient(String barcode) {
+		return macronutrientRepo.getMacronutrientsByIngredient(barcode);
 	}
 }

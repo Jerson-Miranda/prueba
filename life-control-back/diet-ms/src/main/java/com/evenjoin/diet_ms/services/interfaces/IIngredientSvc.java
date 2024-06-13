@@ -15,7 +15,8 @@ public interface IIngredientSvc {
 	public List<Ingredient> getIngredientsBySubcategory(Long IdSubcategory);
 	public Ingredient getIngredientWithMaxNutrient(String nutrient);
 	public Ingredient getIngredientWithMinNutrient(String nutrient);
-	public BigDecimal getQuantityToConsume(Long idIngredient);
+	public BigDecimal getQuantityToConsume(String barcode);
 	public List<Ingredient> getIngredientsByRecipe(Long idRecipeBook);
+	public List<Ingredient> getIngredientsByMinStock(Integer stock);
 	
 }

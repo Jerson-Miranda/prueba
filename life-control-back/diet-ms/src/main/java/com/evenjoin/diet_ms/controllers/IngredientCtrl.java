@@ -1,5 +1,16 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,22 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.http.HttpStatus;
 import com.evenjoin.diet_ms.entity.Ingredient;
 import com.evenjoin.diet_ms.services.IngredientSvc;
-
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 
@@ -74,11 +71,14 @@ public class IngredientCtrl {
 			@PathVariable Long idIngredient) {
 		return CompletableFuture.supplyAsync(() -> {
 			Ingredient currentIngredient = ingredientSvc.getIngredient(idIngredient);
-			currentIngredient.setBrand(ingredient.getBrand());
-			currentIngredient.setName(ingredient.getName());
-			currentIngredient.setMicronutrient(ingredient.getMicronutrient());
-			currentIngredient.setMacronutrient(ingredient.getMacronutrient());
-			currentIngredient.setSubcategory(ingredient.getSubcategory());
+			currentIngredient.setBarcode(ingredient.getBarcode());
+			currentIngredient.setPhoto(ingredient.getPhoto());
+			currentIngredient.setDescription(ingredient.getDescription());
+			currentIngredient.setGrMlPza(ingredient.getGrMlPza());
+			currentIngredient.setPrice(ingredient.getPrice());
+			currentIngredient.setIsFavorite(ingredient.getIsFavorite());
+			currentIngredient.setTypeIngredient(ingredient.getTypeIngredient());
+			currentIngredient.setCommonIngredient(ingredient.getCommonIngredient());
 			return ingredientSvc.addIngredient(currentIngredient);
 		});
 	}
@@ -144,11 +144,11 @@ public class IngredientCtrl {
 	// Get quantity to consume by ingredient
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getMapDecimalCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/quantity/{idIngredient}")
+	@GetMapping("/ingredient/quantity/{barcode}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Map<String, BigDecimal>> getQuantityToConsume(@PathVariable Long idIngredient) {
+	public CompletableFuture<Map<String, BigDecimal>> getQuantityToConsume(@PathVariable String barcode) {
 		return CompletableFuture.supplyAsync(() -> {
-			BigDecimal response = ingredientSvc.getQuantityToConsume(idIngredient);
+			BigDecimal response = ingredientSvc.getQuantityToConsume(barcode);
 			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
 			jsonObject.put("quantity", response);
 			return jsonObject;
@@ -164,6 +164,15 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(()-> ingredientSvc.getIngredientsByRecipe(idRecipeBook));
 	}
 	
+	// Get ingredients by minimum stock
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/stock-min/{stock}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Ingredient>> getIngredientsByMinStock(@PathVariable Integer stock) {
+		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsByMinStock(stock));
+	}
+	
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled ingredient breaker" + t));
@@ -175,11 +184,14 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Ingredient ingredient = new Ingredient();
 			ingredient.setIdIngredient(null);
-			ingredient.setBrand(null);
-			ingredient.setName(null);
-			ingredient.setMacronutrient(null);
-			ingredient.setMicronutrient(null);
-			ingredient.setSubcategory(null);
+			ingredient.setBarcode(null);
+			ingredient.setPhoto(null);
+			ingredient.setDescription(null);
+			ingredient.setGrMlPza(null);
+			ingredient.setPrice(null);
+			ingredient.setIsFavorite(null);
+			ingredient.setTypeIngredient(null);
+			ingredient.setCommonIngredient(null);
 			return ingredient;
 		});
 	}
@@ -191,11 +203,14 @@ public class IngredientCtrl {
 			Ingredient ingredient = new Ingredient();
 			List<Ingredient> list = new ArrayList<Ingredient>();
 			ingredient.setIdIngredient(null);
-			ingredient.setBrand(null);
-			ingredient.setName(null);
-			ingredient.setMacronutrient(null);
-			ingredient.setMicronutrient(null);
-			ingredient.setSubcategory(null);
+			ingredient.setBarcode(null);
+			ingredient.setPhoto(null);
+			ingredient.setDescription(null);
+			ingredient.setGrMlPza(null);
+			ingredient.setPrice(null);
+			ingredient.setIsFavorite(null);
+			ingredient.setTypeIngredient(null);
+			ingredient.setCommonIngredient(null);
 			list.add(ingredient);
 			return list;
 		});
@@ -207,11 +222,14 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
 			jsonObject.put("idIngredient", null);
-			jsonObject.put("brand", null);
-			jsonObject.put("name", null);
-			jsonObject.put("macronutrient", null);
-			jsonObject.put("micronutrient", null);
-			jsonObject.put("subcategory", null);
+			jsonObject.put("barcode", null);
+			jsonObject.put("photo", null);
+			jsonObject.put("description", null);
+			jsonObject.put("grMlPza", null);
+			jsonObject.put("price", null);
+			jsonObject.put("isFavorite", null);
+			jsonObject.put("typeIngredient", null);
+			jsonObject.put("commonIngredient", null);
 			return jsonObject;
 		});
 	}
@@ -241,5 +259,6 @@ public class IngredientCtrl {
 //	    }
 //	    return Collections.emptyMap();
 //	}
+
 
 }

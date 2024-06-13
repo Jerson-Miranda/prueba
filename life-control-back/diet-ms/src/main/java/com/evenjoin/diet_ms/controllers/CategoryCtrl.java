@@ -49,7 +49,7 @@ public class CategoryCtrl {
 	@TimeLimiter(name = "categoryBreaker")
 	@GetMapping("/category/{idCategory}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Category> getCategory(@PathVariable Long idCategory) throws InterruptedException {
+	public CompletableFuture<Category> getCategory(@PathVariable Long idCategory) {
 		return CompletableFuture.supplyAsync(() -> categorySvc.getCategory(idCategory));
 	}
 

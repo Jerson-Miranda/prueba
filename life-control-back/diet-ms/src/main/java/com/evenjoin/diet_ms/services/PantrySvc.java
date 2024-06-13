@@ -1,12 +1,9 @@
 package com.evenjoin.diet_ms.services;
 
-import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.evenjoin.diet_ms.entity.Pantry;
 import com.evenjoin.diet_ms.repository.PantryRepo;
 import com.evenjoin.diet_ms.services.interfaces.IPantrySvc;
@@ -42,13 +39,9 @@ public class PantrySvc implements IPantrySvc {
 	}
 
 	@Override
-	public Date getExpirationDateByIngredient(String barcode) {
-		return pantryRepo.getExpirationDateByIngredient(barcode);
-	}
-
-	@Override
-	public Integer getStockByIngredient(String barcode) {
-		return pantryRepo.getStockByIngredient(barcode);
+	@Transactional(readOnly = true)
+	public List<Object> getStockEDByIngredient(String barcode) {
+		return pantryRepo.getStockEDByIngredient(barcode);
 	}
 	
 }

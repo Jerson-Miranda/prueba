@@ -37,7 +37,7 @@ public class Recipe {
 	@Column(name = "time_minute", nullable = false)
 	private Integer timeMinute;
 	
-	@Column(name = "is_favorite", nullable = false)
+	@Column(name = "is_favorite", nullable = false, columnDefinition = "TINYINT(1)")
 	private Boolean isFavorite;
 	
 	@ManyToOne

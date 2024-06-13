@@ -95,10 +95,10 @@ public class MacronutrientCtrl {
 	// Get macronutrients by ingredient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
-	@GetMapping("/macronutrient/ingredient/{idIngredient}")
+	@GetMapping("/macronutrient/ingredient/{barcode}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Macronutrient> getMacronutrientsByIngredient(@PathVariable Long idIngredient) {
-		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrientsByIngredient(idIngredient));
+	public CompletableFuture<Macronutrient> getMacronutrientsByIngredient(@PathVariable String barcode) {
+		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrientsByIngredient(barcode));
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -111,6 +111,7 @@ public class MacronutrientCtrl {
 		logger.error("Enabled macronutrient breaker" + t);
 		return CompletableFuture.supplyAsync(() -> {
 			Macronutrient ma = new Macronutrient();
+			ma.setIdMacronutrient(null);
 			ma.setKcal(null);
 			ma.setProtein(null);
 			ma.setCarbohydrate(null);
@@ -132,6 +133,7 @@ public class MacronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			List<Macronutrient> list = new ArrayList<Macronutrient>();
 			Macronutrient ma = new Macronutrient();
+			ma.setIdMacronutrient(null);
 			ma.setKcal(null);
 			ma.setProtein(null);
 			ma.setCarbohydrate(null);
@@ -147,4 +149,5 @@ public class MacronutrientCtrl {
 			return list;
 		});
 	}
+	
 }

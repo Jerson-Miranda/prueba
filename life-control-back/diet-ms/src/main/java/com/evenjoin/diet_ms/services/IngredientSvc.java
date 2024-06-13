@@ -73,8 +73,8 @@ public class IngredientSvc implements IIngredientSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public BigDecimal getQuantityToConsume(Long idIngredient) {
-		return ingredientRepo.getQuantityToConsume(idIngredient);
+	public BigDecimal getQuantityToConsume(String barcode) {
+		return ingredientRepo.getQuantityToConsume(barcode);
 	}
 
 	@Override
@@ -83,4 +83,12 @@ public class IngredientSvc implements IIngredientSvc {
 		return ingredientRepo.getIngredientsByRecipe(idRecipeBook);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<Ingredient> getIngredientsByMinStock(Integer stock) {
+		return ingredientRepo.getIngredientsByMinStock(stock);
+	}
+	
+	
+	
 }
