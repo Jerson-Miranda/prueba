@@ -25,11 +25,11 @@ public class RecipeBook {
 	private String name;
 	
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String description;
 	
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String photo;
 	
 	@Lob

@@ -1,7 +1,7 @@
 package com.evenjoin.diet_ms.services.interfaces;
 
+import java.math.BigDecimal;
 import java.util.List;
-
 import com.evenjoin.diet_ms.entity.Recipe;
 
 public interface IRecipeSvc {
@@ -10,5 +10,14 @@ public interface IRecipeSvc {
 	public Recipe getRecipe(Long idRecipe);
 	public Recipe addRecipe(Recipe recipe);
 	public void deleteRecipe(Long idRecipe);
-	
+	public Integer countRecipes();
+	public Integer countRecipesByRecipeBook(Long idRecipeBook);
+	public List<Recipe> getRecipesByRecipeBook(Long idRecipeBook);
+	public List<Recipe> getRecipesBySubcategory(Long idSubcategory);
+	public List<Recipe> getRecipesByCategory(Long idCategory);
+	public List<Recipe> getRecipesByIngredient(Long idIngredient);
+	public Object getMacronutrientsByRecipe(Long idRecipe);
+	public Recipe getRecipeWithMaxMacronutrient(String macronutrient);
+	public Recipe getRecipeWithMinMacronutrient(String macronutrient);
+	public BigDecimal getPriceByRecipe(Long idRecipe);
 }

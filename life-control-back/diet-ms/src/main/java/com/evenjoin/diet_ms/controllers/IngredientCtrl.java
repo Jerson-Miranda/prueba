@@ -91,14 +91,14 @@ public class IngredientCtrl {
 	public CompletableFuture<Void> deleteIngredient(@PathVariable Long idIngredient) {
 		return CompletableFuture.runAsync(() -> ingredientSvc.deleteIngredient(idIngredient));
 	}
-	
+
 	// Count ingredients
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getMapIntegerCB")
 	@TimeLimiter(name = "ingredientBreaker")
 	@GetMapping("/ingredient/count")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Map<String, Integer>> countIngredients(){
-		return CompletableFuture.supplyAsync(()-> {
+	public CompletableFuture<Map<String, Integer>> countIngredients() {
+		return CompletableFuture.supplyAsync(() -> {
 			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
 			jsonObject.put("count", ingredientSvc.countIngredients());
 			return jsonObject;
@@ -148,22 +148,21 @@ public class IngredientCtrl {
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Map<String, BigDecimal>> getQuantityToConsume(@PathVariable String barcode) {
 		return CompletableFuture.supplyAsync(() -> {
-			BigDecimal response = ingredientSvc.getQuantityToConsume(barcode);
 			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
-			jsonObject.put("quantity", response);
+			jsonObject.put("quantity", ingredientSvc.getQuantityToConsume(barcode));
 			return jsonObject;
 		});
 	}
-	
+
 	// Get ingredients by recipe
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
 	@GetMapping("/ingredient/recipe/{idRecipeBook}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Ingredient>> getIngredientsByRecipe(@PathVariable Long idRecipeBook) {
-		return CompletableFuture.supplyAsync(()-> ingredientSvc.getIngredientsByRecipe(idRecipeBook));
+		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsByRecipe(idRecipeBook));
 	}
-	
+
 	// Get ingredients by minimum stock
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
@@ -172,12 +171,12 @@ public class IngredientCtrl {
 	public CompletableFuture<List<Ingredient>> getIngredientsByMinStock(@PathVariable Integer stock) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsByMinStock(stock));
 	}
-	
+
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled ingredient breaker" + t));
 	}
-	
+
 	// (CircuitBreaker) Get object circuit breaker
 	public CompletableFuture<Ingredient> getObjectCB(Throwable t) {
 		logger.error("Enabled ingredient breaker" + t);
@@ -195,7 +194,7 @@ public class IngredientCtrl {
 			return ingredient;
 		});
 	}
-	
+
 	// (CircuitBreaker) Get list object circuit breaker
 	public CompletableFuture<List<Ingredient>> getListObjectCB(Throwable t) {
 		logger.error("Enabled ingredient breaker" + t);
@@ -215,7 +214,7 @@ public class IngredientCtrl {
 			return list;
 		});
 	}
-	
+
 	// (CircuitBreaker) Get map decimal circuit breaker
 	public CompletableFuture<Map<String, BigDecimal>> getMapDecimalCB(Throwable t) {
 		logger.error("Enabled ingredient breaker " + t);
@@ -233,7 +232,7 @@ public class IngredientCtrl {
 			return jsonObject;
 		});
 	}
-	
+
 	// (CircuitBreaker) Get map integer circuit breaker
 	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
 		logger.error("Enabled ingredient breaker " + t);
@@ -243,22 +242,5 @@ public class IngredientCtrl {
 			return jsonObject;
 		});
 	}
-
-//	//Get ingredient with max nutrient
-//	@GetMapping("/ingredient/min/{nutrient}")
-//	@ResponseStatus(code = HttpStatus.OK)
-//	public Map<String, Object> getIngredientWithMinNutrient(@PathVariable String nutrient) {
-//	    Object response = ingredientSvc.getIngredientWithMinNutrient(nutrient);
-//	    if (response instanceof Object[]) {
-//	        Object[] responseData = (Object[]) response;
-//	            Map<String, Object> resultMap = new HashMap<>();
-//	            resultMap.put("name", responseData[0]);
-//	            resultMap.put(nutrient, responseData[1]);
-//	            resultMap.put("photo", responseData[2]);
-//	            return resultMap;
-//	    }
-//	    return Collections.emptyMap();
-//	}
-
 
 }

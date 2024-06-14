@@ -1,7 +1,10 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +41,7 @@ public class RecipeCtrl {
 	@GetMapping("/recipe/all")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Recipe>> getRecipes() {
-		return CompletableFuture.supplyAsync(()-> recipeSvc.getRecipes());
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipes());
 	}
 
 	// Get a recipe
@@ -47,7 +50,7 @@ public class RecipeCtrl {
 	@GetMapping("/recipe/{idRecipe}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipe(@PathVariable Long idRecipe) {
-		return CompletableFuture.supplyAsync(()->recipeSvc.getRecipe(idRecipe));
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipe(idRecipe));
 	}
 
 	// Add a recipe
@@ -56,7 +59,7 @@ public class RecipeCtrl {
 	@PostMapping("/recipe/add")
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public CompletableFuture<Recipe> addRecipe(@RequestBody Recipe recipe) {
-		return CompletableFuture.supplyAsync(()->recipeSvc.addRecipe(recipe));
+		return CompletableFuture.supplyAsync(() -> recipeSvc.addRecipe(recipe));
 	}
 
 	// Update a recipe
@@ -65,7 +68,7 @@ public class RecipeCtrl {
 	@PutMapping("/recipe/update/{idRecipe}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> updateRecipe(@RequestBody Recipe recipe, @PathVariable Long idRecipe) {
-		return CompletableFuture.supplyAsync(()-> {
+		return CompletableFuture.supplyAsync(() -> {
 			Recipe currentRecipe = recipeSvc.getRecipe(idRecipe);
 			currentRecipe.setName(recipe.getName());
 			currentRecipe.setProcedure_text(recipe.getProcedure_text());
@@ -73,7 +76,6 @@ public class RecipeCtrl {
 			currentRecipe.setTimeMinute(recipe.getTimeMinute());
 			currentRecipe.setIsFavorite(recipe.getIsFavorite());
 			currentRecipe.setSubcategory(recipe.getSubcategory());
-			currentRecipe.setRecipeBook(recipe.getRecipeBook());
 			return recipeSvc.addRecipe(currentRecipe);
 		});
 	}
@@ -84,7 +86,124 @@ public class RecipeCtrl {
 	@DeleteMapping("/recipe/{idRecipe}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public CompletableFuture<Void> deleteRecipe(@PathVariable Long idRecipe) {
-		return CompletableFuture.runAsync(()-> recipeSvc.deleteRecipe(idRecipe));
+		return CompletableFuture.runAsync(() -> recipeSvc.deleteRecipe(idRecipe));
+	}
+
+	// Count recipes
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/count")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countRecipes() {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", recipeSvc.countRecipes());
+			return jsonObject;
+		});
+	}
+
+	// Count recipes by recipe book
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/count/{idRecipeBook}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> countRecipesByRecipeBook(@PathVariable Long idRecipeBook) {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", recipeSvc.countRecipesByRecipeBook(idRecipeBook));
+			return jsonObject;
+		});
+	}
+
+	// Get recipes by recipe book
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/recipe-book/{idRecipeBook}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getRecipesByRecipeBook(@PathVariable Long idRecipeBook) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesByRecipeBook(idRecipeBook));
+	}
+
+	// Get recipes by subcategory
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/subcategory/{idSubcategory}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getRecipesBySubcategory(@PathVariable Long idSubcategory) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesBySubcategory(idSubcategory));
+	}
+
+	// Get recipes by category
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/category/{idCategory}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getRecipesByCategory(@PathVariable Long idCategory) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesByCategory(idCategory));
+	}
+
+	// Get recipes by ingredient
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/ingredient/{idIngredient}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getRecipesByIngredient(@PathVariable Long idIngredient) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesByIngredient(idIngredient));
+	}
+
+	// Get macronutrients by recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/macronutrient/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getMacronutrientsByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = recipeSvc.getMacronutrientsByRecipe(idRecipe);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("kcal", res[0]);
+			jsonObject.put("protein", res[1]);
+			jsonObject.put("carbohydrate", res[2]);
+			jsonObject.put("sugar", res[3]);
+			jsonObject.put("addedSugar", res[4]);
+			jsonObject.put("fat", res[5]);
+			jsonObject.put("saturatedFat", res[6]);
+			jsonObject.put("trans", res[7]);
+			jsonObject.put("fiber", res[8]);
+			jsonObject.put("sodium", res[9]);
+			return jsonObject;
+		});
+	}
+
+	// Get recipe with maximum macronutrient
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/macronutrient-max/{macronutrient}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMaxMacronutrient(@PathVariable String macronutrient) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxMacronutrient(macronutrient));
+	}
+
+	// Get recipe with minumum macronutrient
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/macronutrient-min/{macronutrient}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMinMacronutrient(@PathVariable String macronutrient) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinMacronutrient(macronutrient));
+	}
+
+	// Get price by recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapDecimalCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/price/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, BigDecimal>> getPriceByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
+			jsonObject.put("price", recipeSvc.getPriceByRecipe(idRecipe));
+			return jsonObject;
+		});
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -104,7 +223,6 @@ public class RecipeCtrl {
 			recipe.setTimeMinute(null);
 			recipe.setIsFavorite(null);
 			recipe.setSubcategory(null);
-			recipe.setRecipeBook(null);
 			return recipe;
 		});
 	}
@@ -122,9 +240,38 @@ public class RecipeCtrl {
 			recipe.setTimeMinute(null);
 			recipe.setIsFavorite(null);
 			recipe.setSubcategory(null);
-			recipe.setRecipeBook(null);
 			list.add(recipe);
 			return list;
 		});
 	}
+
+	// (CircuitBreaker) Get map object circuit breaker
+	public CompletableFuture<Map<String, Object>> getMapObjectCB(Throwable t) {
+		logger.error("Enabled recipe breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Object> jsonObject = new HashMap<>();
+			jsonObject.put("kcal", null);
+			jsonObject.put("protein", null);
+			jsonObject.put("carbohydrate", null);
+			jsonObject.put("sugar", null);
+			jsonObject.put("addedSugar", null);
+			jsonObject.put("fat", null);
+			jsonObject.put("saturatedFat", null);
+			jsonObject.put("trans", null);
+			jsonObject.put("fiber", null);
+			jsonObject.put("sodium", null);
+			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get map decimal circuit breaker
+	public CompletableFuture<Map<String, BigDecimal>> getMapDecimalCB(Throwable t) {
+		logger.error("Enabled recipe breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
+			jsonObject.put("price", null);
+			return jsonObject;
+		});
+	}
+
 }

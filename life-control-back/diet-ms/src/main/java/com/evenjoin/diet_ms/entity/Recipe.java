@@ -27,11 +27,11 @@ public class Recipe {
 	private String name;
 	
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String procedure_text;
 	
 	@Lob
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "LONGTEXT")
 	private String photo;
 
 	@Column(name = "time_minute", nullable = false)
@@ -43,9 +43,5 @@ public class Recipe {
 	@ManyToOne
 	@JoinColumn(name = "subcategory", nullable = false)
 	private Subcategory subcategory;
-	
-	@ManyToOne
-	@JoinColumn(name = "recipe_book", nullable = false)
-	private RecipeBook recipeBook;
 	
 }

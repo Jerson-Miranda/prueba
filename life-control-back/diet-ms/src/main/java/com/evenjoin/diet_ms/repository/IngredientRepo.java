@@ -93,9 +93,13 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 	// Get ingredients by minimum stock
 	@Query("SELECT i " +
 			"FROM Ingredient i " +
-			"JOIN RecipeIngredient ri ON i.idIngredient = ri.ingredient.idIngredient " +
-			"JOIN Recipe r ON ri.recipe.idRecipe = r.idRecipe " +
-			"WHERE r.idRecipe = :stock")
+			"JOIN ( " +
+			"SELECT i.idIngredient AS idIngredient, SUM(p.stock) AS totalStock " +
+			"FROM Ingredient i " +
+			"JOIN Pantry p ON p.ingredient.idIngredient = i.idIngredient " +
+			"GROUP BY i.idIngredient " +
+			") data ON i.idIngredient = data.idIngredient " +
+			"WHERE data.totalStock <= :stock")
 	public List<Ingredient> getIngredientsByMinStock(@Param("stock") Integer stock);
 
 }
