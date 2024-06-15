@@ -152,7 +152,7 @@ public class RecipeCtrl {
 	}
 
 	// Get macronutrients by recipe
-	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapObjectCB")
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapMacronutrientCB")
 	@TimeLimiter(name = "recipeBreaker")
 	@GetMapping("/recipe/macronutrient/{idRecipe}")
 	@ResponseStatus(code = HttpStatus.OK)
@@ -193,6 +193,93 @@ public class RecipeCtrl {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinMacronutrient(macronutrient));
 	}
 
+	// Get vitamins by recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapVitaminCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/vitamin/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getVitaminsByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = recipeSvc.getVitaminsByRecipe(idRecipe);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("vitaminA", res[0]);
+			jsonObject.put("vitaminB", res[1]);
+			jsonObject.put("vitaminC", res[2]);
+			jsonObject.put("vitaminD", res[3]);
+			jsonObject.put("vitaminE", res[4]);
+			jsonObject.put("vitaminK", res[5]);
+			return jsonObject;
+		});
+	}
+
+	// Get recipe with maximum vitamin
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/vitamin-max/{vitamin}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMaxVitamin(@PathVariable String vitamin) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxVitamin(vitamin));
+	}
+
+	// Get recipe with minimum vitamin
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/vitamin-min/{vitamin}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMinVitamin(@PathVariable String vitamin) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinVitamin(vitamin));
+	}
+
+	// Get minerals by recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapMineralCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/mineral/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getMineralsByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = recipeSvc.getMineralsByRecipe(idRecipe);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("calcium", res[0]);
+			jsonObject.put("phosphorus", res[1]);
+			jsonObject.put("potassium", res[2]);
+			jsonObject.put("sodium", res[3]);
+			jsonObject.put("chloride", res[4]);
+			jsonObject.put("magnesium", res[5]);
+			jsonObject.put("sulfur", res[6]);
+			jsonObject.put("iron", res[7]);
+			jsonObject.put("zinc", res[8]);
+			jsonObject.put("copper", res[9]);
+			jsonObject.put("manganese", res[10]);
+			jsonObject.put("iodine", res[11]);
+			jsonObject.put("selenium", res[12]);
+			jsonObject.put("molybdenum", res[13]);
+			jsonObject.put("cobalt", res[14]);
+			jsonObject.put("fluoride", res[15]);
+			jsonObject.put("chromium", res[16]);
+			return jsonObject;
+		});
+	}
+
+	// Get recipe with maximum mineral
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/mineral-max/{mineral}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMaxMineral(@PathVariable String mineral) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxMineral(mineral));
+	}
+
+	// Get recipe with minimum mineral
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/mineral-min/{mineral}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMinMineral(@PathVariable String mineral) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinMineral(mineral));
+	}
+
 	// Get price by recipe
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getMapDecimalCB")
 	@TimeLimiter(name = "recipeBreaker")
@@ -204,6 +291,51 @@ public class RecipeCtrl {
 			jsonObject.put("price", recipeSvc.getPriceByRecipe(idRecipe));
 			return jsonObject;
 		});
+	}
+
+	// Get recipe with maximum price
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/price-max")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMaxPrice() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxPrice());
+	}
+
+	// Get recipe with minimum price
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/price-min")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMinPrice() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinPrice());
+	}
+
+	// Get recipe with maximum time
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/time-max")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMaxTime() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxTime());
+	}
+
+	// Get recipe with minimum time
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/time-min")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getRecipeWithMinTime() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinTime());
+	}
+
+	// Get favorite recipes
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/favorite")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getFavoriteRecipes() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getFavoriteRecipes());
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -246,7 +378,7 @@ public class RecipeCtrl {
 	}
 
 	// (CircuitBreaker) Get map object circuit breaker
-	public CompletableFuture<Map<String, Object>> getMapObjectCB(Throwable t) {
+	public CompletableFuture<Map<String, Object>> getMapMacronutrientCB(Throwable t) {
 		logger.error("Enabled recipe breaker" + t);
 		return CompletableFuture.supplyAsync(() -> {
 			Map<String, Object> jsonObject = new HashMap<>();
@@ -260,6 +392,47 @@ public class RecipeCtrl {
 			jsonObject.put("trans", null);
 			jsonObject.put("fiber", null);
 			jsonObject.put("sodium", null);
+			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get map object circuit breaker
+	public CompletableFuture<Map<String, Object>> getMapVitaminCB(Throwable t) {
+		logger.error("Enabled recipe breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Object> jsonObject = new HashMap<>();
+			jsonObject.put("vitaminA", null);
+			jsonObject.put("vitaminB", null);
+			jsonObject.put("vitaminC", null);
+			jsonObject.put("vitaminD", null);
+			jsonObject.put("vitaminE", null);
+			jsonObject.put("vitaminK", null);
+			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get map object circuit breaker
+	public CompletableFuture<Map<String, Object>> getMapMineralCB(Throwable t) {
+		logger.error("Enabled recipe breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Object> jsonObject = new HashMap<>();
+			jsonObject.put("calcium", null);
+			jsonObject.put("phosphorus", null);
+			jsonObject.put("potassium", null);
+			jsonObject.put("sodium", null);
+			jsonObject.put("chloride", null);
+			jsonObject.put("magnesium", null);
+			jsonObject.put("sulfur", null);
+			jsonObject.put("iron", null);
+			jsonObject.put("zinc", null);
+			jsonObject.put("copper", null);
+			jsonObject.put("manganese", null);
+			jsonObject.put("iodine", null);
+			jsonObject.put("selenium", null);
+			jsonObject.put("molybdenum", null);
+			jsonObject.put("cobalt", null);
+			jsonObject.put("fluoride", null);
+			jsonObject.put("chromium", null);
 			return jsonObject;
 		});
 	}

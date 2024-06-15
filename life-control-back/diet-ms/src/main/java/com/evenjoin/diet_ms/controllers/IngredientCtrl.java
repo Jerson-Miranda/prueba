@@ -172,6 +172,15 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsByMinStock(stock));
 	}
 
+	// Get favorite ingredients
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/favorite")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Ingredient>> getFavoriteIngredients() {
+		return CompletableFuture.supplyAsync(() -> ingredientSvc.getFavoriteIngredients());
+	}
+
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled ingredient breaker" + t));

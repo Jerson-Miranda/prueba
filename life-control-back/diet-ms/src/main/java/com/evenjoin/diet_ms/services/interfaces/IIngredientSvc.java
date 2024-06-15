@@ -18,5 +18,6 @@ public interface IIngredientSvc {
 	public BigDecimal getQuantityToConsume(String barcode);
 	public List<Ingredient> getIngredientsByRecipe(Long idRecipeBook);
 	public List<Ingredient> getIngredientsByMinStock(Integer stock);
+	public List<Ingredient> getFavoriteIngredients();
 	
 }

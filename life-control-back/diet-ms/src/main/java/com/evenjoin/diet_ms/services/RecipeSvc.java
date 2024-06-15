@@ -72,28 +72,98 @@ public class RecipeSvc implements IRecipeSvc {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Recipe> getRecipesByIngredient(Long idIngredient) {
 		return recipeRepo.getRecipesByIngredient(idIngredient);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Object getMacronutrientsByRecipe(Long idRecipe) {
 		return recipeRepo.getMacronutrientsByRecipe(idRecipe); 
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Recipe getRecipeWithMaxMacronutrient(String macronutrient) {
 		return recipeRepo.getRecipeWithMaxMacronutrient(macronutrient);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Recipe getRecipeWithMinMacronutrient(String macronutrient) {
 		return recipeRepo.getRecipeWithMinMacronutrient(macronutrient);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
+	public Object getVitaminsByRecipe(Long idRecipe) {
+		return recipeRepo.getVitaminsByRecipe(idRecipe);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMaxVitamin(String vitamin) {
+		return recipeRepo.getRecipeWithMaxVitamin(vitamin);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMinVitamin(String vitamin) {
+		return recipeRepo.getRecipeWithMinVitamin(vitamin);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getMineralsByRecipe(Long idRecipe) {
+		return recipeRepo.getMineralsByRecipe(idRecipe);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMaxMineral(String mineral) {
+		return recipeRepo.getRecipeWithMaxMineral(mineral);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMinMineral(String mineral) {
+		return recipeRepo.getRecipeWithMinMineral(mineral);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
 	public BigDecimal getPriceByRecipe(Long idRecipe) {
 		return recipeRepo.getPriceByRecipe(idRecipe);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMaxPrice() {
+		return recipeRepo.getRecipeWithMaxPrice();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMinPrice() {
+		return recipeRepo.getRecipeWithMinPrice();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMaxTime() {
+		return recipeRepo.getRecipeWithMaxTime();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getRecipeWithMinTime() {
+		return recipeRepo.getRecipeWithMinTime();
+	}
+
+	@Override
+	public List<Recipe> getFavoriteRecipes() {
+		return recipeRepo.getFavoriteRecipes();
+	}
+	
 }

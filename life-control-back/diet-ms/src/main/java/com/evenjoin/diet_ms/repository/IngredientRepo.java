@@ -2,10 +2,8 @@ package com.evenjoin.diet_ms.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
 import com.evenjoin.diet_ms.entity.Ingredient;
 
 import feign.Param;
@@ -101,5 +99,11 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			") data ON i.idIngredient = data.idIngredient " +
 			"WHERE data.totalStock <= :stock")
 	public List<Ingredient> getIngredientsByMinStock(@Param("stock") Integer stock);
+
+	// Get favorite ingredients
+	@Query("SELECT i " +
+			"FROM Ingredient i " +
+			"WHERE i.isFavorite = true")
+	public List<Ingredient> getFavoriteIngredients();
 
 }

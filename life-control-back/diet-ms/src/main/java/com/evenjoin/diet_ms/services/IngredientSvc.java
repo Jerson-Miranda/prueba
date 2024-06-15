@@ -88,7 +88,10 @@ public class IngredientSvc implements IIngredientSvc {
 	public List<Ingredient> getIngredientsByMinStock(Integer stock) {
 		return ingredientRepo.getIngredientsByMinStock(stock);
 	}
-	
-	
+
+	@Override
+	public List<Ingredient> getFavoriteIngredients() {
+		return ingredientRepo.getFavoriteIngredients();
+	}
 	
 }

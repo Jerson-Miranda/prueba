@@ -19,5 +19,17 @@ public interface IRecipeSvc {
 	public Object getMacronutrientsByRecipe(Long idRecipe);
 	public Recipe getRecipeWithMaxMacronutrient(String macronutrient);
 	public Recipe getRecipeWithMinMacronutrient(String macronutrient);
+	public Object getVitaminsByRecipe(Long idRecipe);
+	public Recipe getRecipeWithMaxVitamin(String vitamin);
+	public Recipe getRecipeWithMinVitamin(String vitamin);
+	public Object getMineralsByRecipe(Long idRecipe);
+	public Recipe getRecipeWithMaxMineral(String mineral);
+	public Recipe getRecipeWithMinMineral(String mineral);
 	public BigDecimal getPriceByRecipe(Long idRecipe);
+	public Recipe getRecipeWithMaxPrice();
+	public Recipe getRecipeWithMinPrice();
+	public Recipe getRecipeWithMaxTime();
+	public Recipe getRecipeWithMinTime();
+	public List<Recipe> getFavoriteRecipes();
+
 }
