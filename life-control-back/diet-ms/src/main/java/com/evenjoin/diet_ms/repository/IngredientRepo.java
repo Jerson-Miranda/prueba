@@ -1,11 +1,11 @@
 package com.evenjoin.diet_ms.repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.evenjoin.diet_ms.entity.Ingredient;
-
 import feign.Param;
 
 public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
@@ -105,5 +105,33 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"FROM Ingredient i " +
 			"WHERE i.isFavorite = true")
 	public List<Ingredient> getFavoriteIngredients();
+
+	// Get ingredients by diet
+	@Query("SELECT i.idIngredient, i.barcode, ci.name, ci.brand, i.grMlPza, " +
+			"SUM(ri.amount * dr.portion) AS amount, " +
+			"SUM(ri.amount * i.price / i.grMlPza * dr.portion) AS price " +
+			"FROM CommonIngredient ci " +
+			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
+			"JOIN RecipeIngredient ri ON ri.ingredient.idIngredient = i.idIngredient " +
+			"JOIN Recipe r ON r.idRecipe = ri.recipe.idRecipe " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"WHERE d.idDiet = :idDiet " +
+			"GROUP BY i.idIngredient")
+	public List<Object> getIngredientsByDiet(@Param("idDiet") Long idDiet);
+
+	// Get ingredients by diet between dates
+	@Query("SELECT i.idIngredient, i.barcode, ci.name, ci.brand, i.grMlPza, " +
+			"SUM(ri.amount * dr.portion) AS amount, " +
+			"SUM(ri.amount * i.price / i.grMlPza * dr.portion) AS price " +
+			"FROM CommonIngredient ci " +
+			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
+			"JOIN RecipeIngredient ri ON ri.ingredient.idIngredient = i.idIngredient " +
+			"JOIN Recipe r ON r.idRecipe = ri.recipe.idRecipe " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"WHERE d.date BETWEEN :startDate AND :endDate " +
+			"GROUP BY i.idIngredient")
+	public List<Object> getIngredientsByDietRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 }

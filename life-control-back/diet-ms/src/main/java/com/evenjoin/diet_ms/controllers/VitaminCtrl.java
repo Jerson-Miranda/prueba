@@ -1,7 +1,12 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +89,7 @@ public class VitaminCtrl {
 	public CompletableFuture<Void> deleteVitamin(@PathVariable Long idVitamin) {
 		return CompletableFuture.runAsync(() -> vitaminSvc.deleteVitamin(idVitamin));
 	}
-	
+
 	// Get vitamins by ingredient
 	@CircuitBreaker(name = "vitaminBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "vitaminBreaker")
@@ -92,6 +97,62 @@ public class VitaminCtrl {
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Vitamin> getVitaminsByIngredient(@PathVariable String barcode) {
 		return CompletableFuture.supplyAsync(() -> vitaminSvc.getVitaminsByIngredient(barcode));
+	}
+
+	// Get vitamins by diet
+	@CircuitBreaker(name = "vitaminBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "vitaminBreaker")
+	@GetMapping("/vitamin/diet/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getVitaminsByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = vitaminSvc.getVitaminsByDiet(idDiet);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("vitaminA", res[0]);
+			jsonObject.put("vitaminB", res[1]);
+			jsonObject.put("vitaminC", res[2]);
+			jsonObject.put("vitaminD", res[3]);
+			jsonObject.put("vitaminE", res[4]);
+			jsonObject.put("vitaminK", res[5]);
+			return jsonObject;
+		});
+	}
+
+	// Get vitamins by diet between dates
+	@CircuitBreaker(name = "vitaminBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "vitaminBreaker")
+	@GetMapping("/vitamin/diet/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getVitaminsByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			List<Object> response = vitaminSvc.getVitaminsByDietRange(startDate1, endDate1);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object res : response) {
+				Object[] row = (Object[]) res;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idDiet", row[0]);
+				jsonObject.put("date", row[1]);
+				jsonObject.put("vitaminA", row[2]);
+				jsonObject.put("vitaminB", row[3]);
+				jsonObject.put("vitaminC", row[4]);
+				jsonObject.put("vitaminD", row[5]);
+				jsonObject.put("vitaminE", row[6]);
+				jsonObject.put("vitaminK", row[7]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -130,6 +191,21 @@ public class VitaminCtrl {
 			vitamin.setVitaminK(null);
 			list.add(vitamin);
 			return list;
+		});
+	}
+
+	// (CircuitBreaker) Get map object circuit breaker
+	public CompletableFuture<Map<String, Object>> getMapObjectCB(Throwable t) {
+		logger.error("Enabled vitamin breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("vitaminA", null);
+			jsonObject.put("vitaminB", null);
+			jsonObject.put("vitaminC", null);
+			jsonObject.put("vitaminD", null);
+			jsonObject.put("vitaminE", null);
+			jsonObject.put("vitaminK", null);
+			return jsonObject;
 		});
 	}
 

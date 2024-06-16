@@ -1,8 +1,8 @@
 package com.evenjoin.diet_ms.repository;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.evenjoin.diet_ms.entity.Recipe;
@@ -269,7 +269,6 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "LIMIT 1")
         public Recipe getRecipeWithMinMineral(@Param("mineral") String mineral);
 
-
         // Get price by recipe
         @Query("SELECT SUM(ri.amount * i.price / i.grMlPza) AS total_price " +
                         "FROM Ingredient i " +
@@ -323,5 +322,23 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "FROM Recipe r " +
                         "WHERE r.isFavorite = true")
         public List<Recipe> getFavoriteRecipes();
+
+        // Get recipes by diet
+        @Query("SELECT r " +
+                        "FROM Recipe r " +
+                        "JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+                        "JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+                        "WHERE d.idDiet = :idDiet")
+        public List<Recipe> getRecipesByDiet(@Param("idDiet") Long idDiet);
+
+        // Get recipes by diet between dates
+        @Query("SELECT " +
+                        "dr.recipe.idRecipe, " +
+                        "SUM(dr.portion) AS portion " +
+                        "FROM DietRecipe dr " +
+                        "JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+                        "WHERE d.date BETWEEN :startDate AND :endDate " +
+                        "GROUP BY dr.recipe.idRecipe")
+        public List<Object> getRecipesByDietRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 }

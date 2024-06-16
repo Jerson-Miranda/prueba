@@ -1,7 +1,13 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
@@ -83,6 +89,88 @@ public class DietCtrl {
 		return CompletableFuture.runAsync(() -> dietSvc.deleteDiet(idDiet));
 	}
 
+	// Get total price by diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getMapDecimalCB")
+	@TimeLimiter(name = "dietBreaker")
+	@GetMapping("/diet/price/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, BigDecimal>> getPriceByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			BigDecimal response = dietSvc.getPriceByDiet(idDiet);
+			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
+			jsonObject.put("price", response);
+			return jsonObject;
+		});
+	}
+
+	// Get total price by diet between dates
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getMapDecimalCB")
+	@TimeLimiter(name = "dietBreaker")
+	@GetMapping("/diet/price/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, BigDecimal>> getPriceByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			BigDecimal response = dietSvc.getPriceByDietRange(startDate1, endDate1);
+			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
+			jsonObject.put("price", response);
+			return jsonObject;
+		});
+	}
+
+	// Get prices by diet between dates
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getListMapObjectCB")
+	@TimeLimiter(name = "dietBreaker")
+	@GetMapping("/diet/prices/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getPricesByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			List<Object> response = dietSvc.getPricesByDietRange(startDate1, endDate1);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object res : response) {
+				Object[] row = (Object[]) res;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idRecipe", row[0]);
+				jsonObject.put("price", row[1]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
+	}
+
+	// Get total time by diet
+	@CircuitBreaker(name = "dietBreaker", fallbackMethod = "getMapIntegerCB")
+	@TimeLimiter(name = "dietBreaker")
+	@GetMapping("/diet/time/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Integer>> getTimeByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			Integer response = dietSvc.getTimeByDiet(idDiet);
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("timeMinute", response);
+			return jsonObject;
+		});
+	}
+
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled diet breaker" + t));
@@ -93,7 +181,7 @@ public class DietCtrl {
 		logger.error("Enabled diet breaker" + t);
 		return CompletableFuture.supplyAsync(() -> {
 			Diet diet = new Diet();
-			diet.setIdDite(null);
+			diet.setIdDiet(null);
 			diet.setDate(null);
 			return diet;
 		});
@@ -105,10 +193,43 @@ public class DietCtrl {
 		return CompletableFuture.supplyAsync(() -> {
 			Diet diet = new Diet();
 			List<Diet> list = new ArrayList<Diet>();
-			diet.setIdDite(null);
+			diet.setIdDiet(null);
 			diet.setDate(null);
 			list.add(diet);
 			return list;
+		});
+	}
+
+	// (CircuitBreaker) Get list map object circuit breaker
+	public CompletableFuture<List<Map<String, Object>>> getListMapObjectCB(Throwable t) {
+		logger.error("Enabled diet breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("idRecipe", null);
+			jsonObject.put("price", null);
+			json.add(jsonObject);
+			return json;
+		});
+	}
+
+	// (CircuitBreaker) Get map decimal circuit breaker
+	public CompletableFuture<Map<String, BigDecimal>> getMapDecimalCB(Throwable t) {
+		logger.error("Enabled diet breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
+			jsonObject.put("price", null);
+			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled diet breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("timeMinute", null);
+			return jsonObject;
 		});
 	}
 

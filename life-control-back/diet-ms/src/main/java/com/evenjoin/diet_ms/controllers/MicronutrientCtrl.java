@@ -41,7 +41,7 @@ public class MicronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> micronutrientSvc.getMicronutrients());
 	}
 
-	// Get a micronutrient 
+	// Get a micronutrient
 	@CircuitBreaker(name = "micronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "micronutrientBreaker")
 	@GetMapping("/micronutrient/{idMicronutrient}")
@@ -50,7 +50,7 @@ public class MicronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> micronutrientSvc.getMicronutrient(idMicronutrient));
 	}
 
-	// Add a micronutrient 
+	// Add a micronutrient
 	@CircuitBreaker(name = "micronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "micronutrientBreaker")
 	@PostMapping("/micronutrient/add")
@@ -59,7 +59,7 @@ public class MicronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> micronutrientSvc.addMicronutrient(micronutrient));
 	}
 
-	// Update a micronutrient 
+	// Update a micronutrient
 	@CircuitBreaker(name = "micronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "micronutrientBreaker")
 	@PutMapping("/micronutrient/update/{idMicronutrient}")
@@ -74,7 +74,7 @@ public class MicronutrientCtrl {
 		});
 	}
 
-	// Delete a micronutrient 
+	// Delete a micronutrient
 	@CircuitBreaker(name = "micronutrientBreaker", fallbackMethod = "getVoidCB")
 	@TimeLimiter(name = "micronutrientBreaker")
 	@DeleteMapping("/micronutrient/{idMicronutrient}")
@@ -82,7 +82,7 @@ public class MicronutrientCtrl {
 	public CompletableFuture<Void> deleteMicronutrient(@PathVariable Long idMicronutrient) {
 		return CompletableFuture.runAsync(() -> micronutrientSvc.deleteMicronutrient(idMicronutrient));
 	}
-	
+
 	// Get micronutrients by ingredient
 	@CircuitBreaker(name = "micronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "micronutrientBreaker")

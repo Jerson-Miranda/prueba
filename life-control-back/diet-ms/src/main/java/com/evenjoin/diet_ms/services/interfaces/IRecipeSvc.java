@@ -1,6 +1,7 @@
 package com.evenjoin.diet_ms.services.interfaces;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.evenjoin.diet_ms.entity.Recipe;
 
@@ -31,5 +32,8 @@ public interface IRecipeSvc {
 	public Recipe getRecipeWithMaxTime();
 	public Recipe getRecipeWithMinTime();
 	public List<Recipe> getFavoriteRecipes();
+	public List<Recipe> getRecipesByDiet(Long idDiet);
+	public List<Object> getRecipesByDietRange(Date startDate, Date endDate);
+
 
 }

@@ -1,6 +1,7 @@
 package com.evenjoin.diet_ms.services;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,8 +163,21 @@ public class RecipeSvc implements IRecipeSvc {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Recipe> getFavoriteRecipes() {
 		return recipeRepo.getFavoriteRecipes();
 	}
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Recipe> getRecipesByDiet(Long idDiet) {
+		return recipeRepo.getRecipesByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getRecipesByDietRange(Date startDate, Date endDate) {
+		return recipeRepo.getRecipesByDietRange(startDate, endDate);
+	}
+
 }

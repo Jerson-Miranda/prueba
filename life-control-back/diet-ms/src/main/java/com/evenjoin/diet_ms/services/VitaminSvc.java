@@ -1,5 +1,6 @@
 package com.evenjoin.diet_ms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,18 @@ public class VitaminSvc implements IVitaminSvc {
 	@Transactional(readOnly = true)
 	public Vitamin getVitaminsByIngredient(String barcode) {
 		return vitaminRepo.getVitaminsByIngredient(barcode);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getVitaminsByDiet(Long idDiet) {
+		return vitaminRepo.getVitaminsByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getVitaminsByDietRange(Date startDate, Date endDate) {
+		return vitaminRepo.getVitaminsByDietRange(startDate, endDate);
 	}
 	
 }

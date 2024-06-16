@@ -1,6 +1,7 @@
 package com.evenjoin.diet_ms.services;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +91,21 @@ public class IngredientSvc implements IIngredientSvc {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Ingredient> getFavoriteIngredients() {
 		return ingredientRepo.getFavoriteIngredients();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getIngredientsByDiet(Long idDiet) {
+		return ingredientRepo.getIngredientsByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getIngredientsByDietRange(Date startDate, Date endDate) {
+		return ingredientRepo.getIngredientsByDietRange(startDate, endDate);
 	}
 	
 }

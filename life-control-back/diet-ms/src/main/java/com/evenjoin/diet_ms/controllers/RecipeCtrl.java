@@ -1,7 +1,10 @@
 package com.evenjoin.diet_ms.controllers;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,7 +181,7 @@ public class RecipeCtrl {
 	// Get recipe with maximum macronutrient
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/macronutrient-max/{macronutrient}")
+	@GetMapping("/recipe/max-macronutrient/{macronutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMaxMacronutrient(@PathVariable String macronutrient) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxMacronutrient(macronutrient));
@@ -187,7 +190,7 @@ public class RecipeCtrl {
 	// Get recipe with minumum macronutrient
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/macronutrient-min/{macronutrient}")
+	@GetMapping("/recipe/min-macronutrient/{macronutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMinMacronutrient(@PathVariable String macronutrient) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinMacronutrient(macronutrient));
@@ -216,7 +219,7 @@ public class RecipeCtrl {
 	// Get recipe with maximum vitamin
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/vitamin-max/{vitamin}")
+	@GetMapping("/recipe/max-vitamin/{vitamin}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMaxVitamin(@PathVariable String vitamin) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxVitamin(vitamin));
@@ -225,7 +228,7 @@ public class RecipeCtrl {
 	// Get recipe with minimum vitamin
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/vitamin-min/{vitamin}")
+	@GetMapping("/recipe/min-vitamin/{vitamin}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMinVitamin(@PathVariable String vitamin) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinVitamin(vitamin));
@@ -265,7 +268,7 @@ public class RecipeCtrl {
 	// Get recipe with maximum mineral
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/mineral-max/{mineral}")
+	@GetMapping("/recipe/max-mineral/{mineral}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMaxMineral(@PathVariable String mineral) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxMineral(mineral));
@@ -274,7 +277,7 @@ public class RecipeCtrl {
 	// Get recipe with minimum mineral
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/mineral-min/{mineral}")
+	@GetMapping("/recipe/min-mineral/{mineral}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMinMineral(@PathVariable String mineral) {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinMineral(mineral));
@@ -296,7 +299,7 @@ public class RecipeCtrl {
 	// Get recipe with maximum price
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/price-max")
+	@GetMapping("/recipe/max-price")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMaxPrice() {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxPrice());
@@ -305,7 +308,7 @@ public class RecipeCtrl {
 	// Get recipe with minimum price
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/price-min")
+	@GetMapping("/recipe/min-price")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMinPrice() {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinPrice());
@@ -314,7 +317,7 @@ public class RecipeCtrl {
 	// Get recipe with maximum time
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/time-max")
+	@GetMapping("/recipe/max-time")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMaxTime() {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMaxTime());
@@ -323,7 +326,7 @@ public class RecipeCtrl {
 	// Get recipe with minimum time
 	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "recipeBreaker")
-	@GetMapping("/recipe/time-min")
+	@GetMapping("/recipe/min-time")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Recipe> getRecipeWithMinTime() {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipeWithMinTime());
@@ -336,6 +339,45 @@ public class RecipeCtrl {
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Recipe>> getFavoriteRecipes() {
 		return CompletableFuture.supplyAsync(() -> recipeSvc.getFavoriteRecipes());
+	}
+
+	// Get recipes by diet
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/diet/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Recipe>> getRecipesByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesByDiet(idDiet));
+	}
+
+	// Get recipes by diet between dates
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListMapRecipeCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/diet/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getRecipesByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			List<Object> response = recipeSvc.getRecipesByDietRange(startDate1, endDate1);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object res : response) {
+				Object[] row = (Object[]) res;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idRecipe", row[0]);
+				jsonObject.put("portion", row[1]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -374,6 +416,16 @@ public class RecipeCtrl {
 			recipe.setSubcategory(null);
 			list.add(recipe);
 			return list;
+		});
+	}
+
+	// (CircuitBreaker) Get map integer circuit breaker
+	public CompletableFuture<Map<String, Integer>> getMapIntegerCB(Throwable t) {
+		logger.error("Enabled recipe breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
+			jsonObject.put("count", null);
+			return jsonObject;
 		});
 	}
 
@@ -444,6 +496,19 @@ public class RecipeCtrl {
 			Map<String, BigDecimal> jsonObject = new HashMap<String, BigDecimal>();
 			jsonObject.put("price", null);
 			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get list map recipe circuit breaker
+	public CompletableFuture<List<Map<String, Object>>> getListMapRecipeCB(Throwable t) {
+		logger.error("Enabled recipe breaker" + t);
+		return CompletableFuture.supplyAsync(() -> {
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("idRecipe", null);
+			jsonObject.put("portion", null);
+			json.add(jsonObject);
+			return json;
 		});
 	}
 

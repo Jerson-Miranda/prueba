@@ -20,7 +20,7 @@ public class Diet {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_diet")
-	private Long idDite;
+	private Long idDiet;
 	
 	@Column(nullable = false, unique = true)
 	private Date date;

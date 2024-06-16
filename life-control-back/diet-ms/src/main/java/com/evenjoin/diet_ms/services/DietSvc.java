@@ -1,5 +1,7 @@
 package com.evenjoin.diet_ms.services;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +40,28 @@ public class DietSvc implements IDietSvc {
 	@Transactional
 	public void deleteDiet(Long idDiet) {
 		dietRepo.deleteById(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal getPriceByDiet(Long idDiet) {
+		return dietRepo.getPriceByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal getPriceByDietRange(Date startDate, Date endDate) {
+		return dietRepo.getPriceByDietRange(startDate, endDate);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getPricesByDietRange(Date startDate, Date endDate) {
+		return dietRepo.getPricesByDietRange(startDate, endDate);
+	}
+
+	@Override
+	public Integer getTimeByDiet(Long idDiet) {
+		return dietRepo.getTimeByDiet(idDiet);
 	}
 }

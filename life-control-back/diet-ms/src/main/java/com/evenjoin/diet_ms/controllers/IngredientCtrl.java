@@ -1,7 +1,10 @@
 package com.evenjoin.diet_ms.controllers;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,19 +126,19 @@ public class IngredientCtrl {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsBySubcategory(idSubcategory));
 	}
 
-	// Get ingredient with maximum nutrient
+	// Get ingredient with maximum macronutrient
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/nutrient-max/{nutrient}")
+	@GetMapping("/ingredient/max-macronutrient/{nutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Ingredient> getIngredientWithMaxNutrient(@PathVariable String nutrient) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientWithMaxNutrient(nutrient));
 	}
 
-	// Get ingredient with minimum nutrient
+	// Get ingredient with minimum macronutrient
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/nutrient-min/{nutrient}")
+	@GetMapping("/ingredient/min-macronutrient/{nutrient}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<Ingredient> getIngredientWithMinNutrient(@PathVariable String nutrient) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientWithMinNutrient(nutrient));
@@ -166,7 +169,7 @@ public class IngredientCtrl {
 	// Get ingredients by minimum stock
 	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListObjectCB")
 	@TimeLimiter(name = "ingredientBreaker")
-	@GetMapping("/ingredient/stock-min/{stock}")
+	@GetMapping("/ingredient/min-stock/{stock}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Ingredient>> getIngredientsByMinStock(@PathVariable Integer stock) {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getIngredientsByMinStock(stock));
@@ -179,6 +182,66 @@ public class IngredientCtrl {
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Ingredient>> getFavoriteIngredients() {
 		return CompletableFuture.supplyAsync(() -> ingredientSvc.getFavoriteIngredients());
+	}
+
+	// Get ingredients by diet
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListMapObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/diet/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getIngredientsByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			List<Object> response = ingredientSvc.getIngredientsByDiet(idDiet);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object obj : response) {
+				Object[] res = (Object[]) obj;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idIngredient", res[0]);
+				jsonObject.put("barcode", res[1]);
+				jsonObject.put("name", res[2]);
+				jsonObject.put("brand", res[3]);
+				jsonObject.put("grMlPza", res[4]);
+				jsonObject.put("amount", res[5]);
+				jsonObject.put("price", res[6]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
+	}
+
+	// Get ingredients by diet between dates
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getListMapObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/diet/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getIngredientsByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			List<Object> response = ingredientSvc.getIngredientsByDietRange(startDate1, endDate1);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object obj : response) {
+				Object[] res = (Object[]) obj;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idIngredient", res[0]);
+				jsonObject.put("barcode", res[1]);
+				jsonObject.put("name", res[2]);
+				jsonObject.put("brand", res[3]);
+				jsonObject.put("grMlPza", res[4]);
+				jsonObject.put("amount", res[5]);
+				jsonObject.put("price", res[6]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -249,6 +312,23 @@ public class IngredientCtrl {
 			Map<String, Integer> jsonObject = new HashMap<String, Integer>();
 			jsonObject.put("count", null);
 			return jsonObject;
+		});
+	}
+
+	// (CircuitBreaker) Get list map object circuit breaker
+	public CompletableFuture<List<Map<String, Object>>> getListMapObjectCB(Throwable t) {
+		logger.error("Enabled ingredient breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("idIngredient", null);
+			jsonObject.put("name", null);
+			jsonObject.put("brand", null);
+			jsonObject.put("grMlPza", null);
+			jsonObject.put("amount", null);
+			jsonObject.put("price", null);
+			json.add(jsonObject);
+			return json;
 		});
 	}
 
