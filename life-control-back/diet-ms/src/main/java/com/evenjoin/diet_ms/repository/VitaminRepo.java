@@ -2,7 +2,6 @@ package com.evenjoin.diet_ms.repository;
 
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.evenjoin.diet_ms.entity.Vitamin;
@@ -16,8 +15,25 @@ public interface VitaminRepo extends JpaRepository<Vitamin, Long> {
 			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
 			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
-			"WHERE i.barcode = :barcode")
-	public Vitamin getVitaminsByIngredient(@Param("barcode") String barcode);
+			"WHERE i.idIngredient = :idIngredient")
+	public Vitamin getVitaminsByIngredient(@Param("idIngredient") Long idIngredient);
+
+	// Get vitamins by recipe
+	@Query("SELECT " +
+			"SUM((v.vitaminA * ri.amount) / 100) AS total_a, " +
+			"SUM((v.vitaminB * ri.amount) / 100) AS total_b, " +
+			"SUM((v.vitaminC * ri.amount) / 100) AS total_c, " +
+			"SUM((v.vitaminD * ri.amount) / 100) AS total_d, " +
+			"SUM((v.vitaminE * ri.amount) / 100) AS total_e, " +
+			"SUM((v.vitaminK * ri.amount) / 100) AS total_k " +
+			"FROM Vitamin v " +
+			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
+			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
+			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
+			"JOIN RecipeIngredient ri ON ri.ingredient.idIngredient = i.idIngredient " +
+			"JOIN Recipe r ON r.idRecipe = ri.recipe.idRecipe " +
+			"WHERE r.idRecipe = :idRecipe")
+	public Object getVitaminsByRecipe(@Param("idRecipe") Long idRecipe);
 
 	// Get vitamins by diet
 	@Query("SELECT " +

@@ -43,8 +43,14 @@ public class VitaminSvc implements IVitaminSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Vitamin getVitaminsByIngredient(String barcode) {
-		return vitaminRepo.getVitaminsByIngredient(barcode);
+	public Vitamin getVitaminsByIngredient(Long idIngredient) {
+		return vitaminRepo.getVitaminsByIngredient(idIngredient);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getVitaminsByRecipe(Long idRecipe) {
+		return vitaminRepo.getVitaminsByRecipe(idRecipe);
 	}
 
 	@Override

@@ -1,7 +1,12 @@
 package com.evenjoin.diet_ms.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +46,7 @@ public class MacronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrients());
 	}
 
-	// Get a macronutrient 
+	// Get a macronutrient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
 	@GetMapping("/macronutrient/{idMacronutrient}")
@@ -50,7 +55,7 @@ public class MacronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrient(idMacronutrient));
 	}
 
-	// Add a macronutrient 
+	// Add a macronutrient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
 	@PostMapping("/macronutrient/add")
@@ -59,7 +64,7 @@ public class MacronutrientCtrl {
 		return CompletableFuture.supplyAsync(() -> macronutrientSvc.addMacronutrient(macronutrient));
 	}
 
-	// Update a macronutrient 
+	// Update a macronutrient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
 	@PutMapping("/macronutrient/update/{idMacronutrient}")
@@ -83,7 +88,7 @@ public class MacronutrientCtrl {
 		});
 	}
 
-	// Delete a macronutrient 
+	// Delete a macronutrient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getVoidCB")
 	@TimeLimiter(name = "macronutrientBreaker")
 	@DeleteMapping("/macronutrient/{idMacronutrient}")
@@ -91,14 +96,102 @@ public class MacronutrientCtrl {
 	public CompletableFuture<Void> deleteMacronutrient(@PathVariable Long idMacronutrient) {
 		return CompletableFuture.runAsync(() -> macronutrientSvc.deleteMacronutrient(idMacronutrient));
 	}
-	
+
 	// Get macronutrients by ingredient
 	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "macronutrientBreaker")
-	@GetMapping("/macronutrient/ingredient/{barcode}")
+	@GetMapping("/macronutrient/ingredient/{idIngredient}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Macronutrient> getMacronutrientsByIngredient(@PathVariable String barcode) {
-		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrientsByIngredient(barcode));
+	public CompletableFuture<Macronutrient> getMacronutrientsByIngredient(@PathVariable Long idIngredient) {
+		return CompletableFuture.supplyAsync(() -> macronutrientSvc.getMacronutrientsByIngredient(idIngredient));
+	}
+
+	// Get macronutrients by recipe
+	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "macronutrientBreaker")
+	@GetMapping("/macronutrient/recipe/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getMacronutrientsByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = macronutrientSvc.getMacronutrientsByRecipe(idRecipe);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("kcal", res[0]);
+			jsonObject.put("protein", res[1]);
+			jsonObject.put("carbohydrate", res[2]);
+			jsonObject.put("sugar", res[3]);
+			jsonObject.put("addedSugar", res[4]);
+			jsonObject.put("fat", res[5]);
+			jsonObject.put("saturatedFat", res[6]);
+			jsonObject.put("trans", res[7]);
+			jsonObject.put("fiber", res[8]);
+			jsonObject.put("sodium", res[9]);
+			return jsonObject;
+		});
+	}
+
+	// Get macronutrients by diet
+	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "macronutrientBreaker")
+	@GetMapping("/macronutrient/diet/{idDiet}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getMacronutrientsByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = macronutrientSvc.getMacronutrientsByDiet(idDiet);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("kcal", res[0]);
+			jsonObject.put("protein", res[1]);
+			jsonObject.put("carbohydrate", res[2]);
+			jsonObject.put("sugar", res[3]);
+			jsonObject.put("addedSugar", res[4]);
+			jsonObject.put("fat", res[5]);
+			jsonObject.put("saturatedFat", res[6]);
+			jsonObject.put("trans", res[7]);
+			jsonObject.put("fiber", res[8]);
+			jsonObject.put("sodium", res[9]);
+			return jsonObject;
+		});
+	}
+
+	// Get macronutrients by diet between dates
+	@CircuitBreaker(name = "macronutrientBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "macronutrientBreaker")
+	@GetMapping("/macronutrient/diet/{startDate}/{endDate}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<List<Map<String, Object>>> getMacronutrientsByDietRange(@PathVariable String startDate,
+			@PathVariable String endDate) {
+		return CompletableFuture.supplyAsync(() -> {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date startDate1;
+			Date endDate1;
+			try {
+				startDate1 = formatter.parse(startDate);
+				endDate1 = formatter.parse(endDate);
+			} catch (ParseException e) {
+				throw new RuntimeException("Invalid date: " + e.getMessage());
+			}
+			List<Object> response = macronutrientSvc.getMacronutrientsByDietRange(startDate1, endDate1);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object res : response) {
+				Object[] row = (Object[]) res;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idDiet", row[0]);
+				jsonObject.put("date", row[1]);
+				jsonObject.put("kcal", row[2]);
+				jsonObject.put("protein", row[3]);
+				jsonObject.put("carbohydrate", row[4]);
+				jsonObject.put("sugar", row[5]);
+				jsonObject.put("addedSugar", row[6]);
+				jsonObject.put("fat", row[7]);
+				jsonObject.put("saturatedFat", row[8]);
+				jsonObject.put("trans", row[9]);
+				jsonObject.put("fiber", row[10]);
+				jsonObject.put("sodium", row[11]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
 	}
 
 	// (CircuitBreaker) Get void circuit breaker
@@ -149,5 +242,24 @@ public class MacronutrientCtrl {
 			return list;
 		});
 	}
-	
+
+	// (CircuitBreaker) Get map object circuit breaker
+	public CompletableFuture<Map<String, Object>> getMapObjectCB(Throwable t) {
+		logger.error("Enabled macronutrient breaker " + t);
+		return CompletableFuture.supplyAsync(() -> {
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("kcal", null);
+			jsonObject.put("protein", null);
+			jsonObject.put("carbohydrate", null);
+			jsonObject.put("sugar", null);
+			jsonObject.put("addedSugar", null);
+			jsonObject.put("fat", null);
+			jsonObject.put("saturatedFat", null);
+			jsonObject.put("trans", null);
+			jsonObject.put("fiber", null);
+			jsonObject.put("sodium", null);
+			return jsonObject;
+		});
+	}
+
 }

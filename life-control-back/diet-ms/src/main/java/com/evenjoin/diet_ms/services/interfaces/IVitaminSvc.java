@@ -10,7 +10,9 @@ public interface IVitaminSvc {
 	public Vitamin getVitamin(Long idVitamin);
 	public Vitamin addVitamin(Vitamin vitamin);
 	public void deleteVitamin(Long idVitamin);
-	public Vitamin getVitaminsByIngredient(String barcode);
+	public Vitamin getVitaminsByIngredient(Long idIngredient);
+	public Object getVitaminsByRecipe(Long idRecipe);
 	public Object getVitaminsByDiet(Long idDiet);
 	public List<Object> getVitaminsByDietRange(Date startDate, Date endDate);
+	
 }

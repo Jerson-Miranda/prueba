@@ -1,5 +1,6 @@
 package com.evenjoin.diet_ms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,25 @@ public class MacronutrientSvc implements IMacronutrientSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Macronutrient getMacronutrientsByIngredient(String barcode) {
-		return macronutrientRepo.getMacronutrientsByIngredient(barcode);
+	public Macronutrient getMacronutrientsByIngredient(Long idIngredient) {
+		return macronutrientRepo.getMacronutrientsByIngredient(idIngredient);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getMacronutrientsByRecipe(Long idRecipe) {
+		return macronutrientRepo.getMacronutrientsByRecipe(idRecipe);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getMacronutrientsByDiet(Long idDiet) {
+		return macronutrientRepo.getMacronutrientsByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getMacronutrientsByDietRange(Date startDate, Date endDate) {
+		return macronutrientRepo.getMacronutrientsByDietRange(startDate, endDate);
 	}
 }

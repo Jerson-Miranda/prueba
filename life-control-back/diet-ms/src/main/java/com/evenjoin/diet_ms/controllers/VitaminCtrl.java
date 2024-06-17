@@ -93,10 +93,30 @@ public class VitaminCtrl {
 	// Get vitamins by ingredient
 	@CircuitBreaker(name = "vitaminBreaker", fallbackMethod = "getObjectCB")
 	@TimeLimiter(name = "vitaminBreaker")
-	@GetMapping("/vitamin/ingredient/{barcode}")
+	@GetMapping("/vitamin/ingredient/{idIngredient}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<Vitamin> getVitaminsByIngredient(@PathVariable String barcode) {
-		return CompletableFuture.supplyAsync(() -> vitaminSvc.getVitaminsByIngredient(barcode));
+	public CompletableFuture<Vitamin> getVitaminsByIngredient(@PathVariable Long idIngredient) {
+		return CompletableFuture.supplyAsync(() -> vitaminSvc.getVitaminsByIngredient(idIngredient));
+	}
+
+	// Get vitamins by recipe
+	@CircuitBreaker(name = "vitaminBreaker", fallbackMethod = "getMapObjectCB")
+	@TimeLimiter(name = "vitaminBreaker")
+	@GetMapping("/vitamin/recipe/{idRecipe}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Map<String, Object>> getVitaminsByRecipe(@PathVariable Long idRecipe) {
+		return CompletableFuture.supplyAsync(() -> {
+			Object response = vitaminSvc.getVitaminsByRecipe(idRecipe);
+			Object[] res = (Object[]) response;
+			Map<String, Object> jsonObject = new HashMap<String, Object>();
+			jsonObject.put("vitaminA", res[0]);
+			jsonObject.put("vitaminB", res[1]);
+			jsonObject.put("vitaminC", res[2]);
+			jsonObject.put("vitaminD", res[3]);
+			jsonObject.put("vitaminE", res[4]);
+			jsonObject.put("vitaminK", res[5]);
+			return jsonObject;
+		});
 	}
 
 	// Get vitamins by diet

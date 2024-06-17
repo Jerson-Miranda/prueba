@@ -1,5 +1,6 @@
 package com.evenjoin.diet_ms.services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,25 @@ public class MineralSvc implements IMineralSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public Mineral getMineralsByIngredient(String barcode) {
-		return mineralRepo.getMineralsByIngredient(barcode);
+	public Mineral getMineralsByIngredient(Long idIngredient) {
+		return mineralRepo.getMineralsByIngredient(idIngredient);
 	}
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getMineralsByRecipe(Long idRecipe) {
+		return mineralRepo.getMineralsByRecipe(idRecipe);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Object getMineralsByDiet(Long idDiet) {
+		return mineralRepo.getMineralsByDiet(idDiet);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Object> getMineralsByDietRange(Date startDate, Date endDate) {
+		return mineralRepo.getMineralsByDietRange(startDate, endDate);
+	}
 }
