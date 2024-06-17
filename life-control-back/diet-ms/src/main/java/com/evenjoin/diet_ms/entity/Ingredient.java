@@ -50,7 +50,7 @@ public class Ingredient {
 	private TypeIngredient typeIngredient;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_common_ingredient", nullable = false)
+	@JoinColumn(name = "common_ingredient", nullable = false)
 	private CommonIngredient commonIngredient;
 	
 }

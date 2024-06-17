@@ -80,7 +80,7 @@ public class MacronutrientCtrl {
 			currentMacronutrient.setAddedSugar(macronutrient.getAddedSugar());
 			currentMacronutrient.setFat(macronutrient.getFat());
 			currentMacronutrient.setSaturatedFat(macronutrient.getSaturatedFat());
-			currentMacronutrient.setTrans(macronutrient.getTrans());
+			currentMacronutrient.setTransFat(macronutrient.getTransFat());
 			currentMacronutrient.setFiber(macronutrient.getFiber());
 			currentMacronutrient.setSodium(macronutrient.getSodium());
 			currentMacronutrient.setPortion(macronutrient.getPortion());
@@ -123,7 +123,7 @@ public class MacronutrientCtrl {
 			jsonObject.put("addedSugar", res[4]);
 			jsonObject.put("fat", res[5]);
 			jsonObject.put("saturatedFat", res[6]);
-			jsonObject.put("trans", res[7]);
+			jsonObject.put("transFat", res[7]);
 			jsonObject.put("fiber", res[8]);
 			jsonObject.put("sodium", res[9]);
 			return jsonObject;
@@ -147,7 +147,7 @@ public class MacronutrientCtrl {
 			jsonObject.put("addedSugar", res[4]);
 			jsonObject.put("fat", res[5]);
 			jsonObject.put("saturatedFat", res[6]);
-			jsonObject.put("trans", res[7]);
+			jsonObject.put("transFat", res[7]);
 			jsonObject.put("fiber", res[8]);
 			jsonObject.put("sodium", res[9]);
 			return jsonObject;
@@ -185,7 +185,7 @@ public class MacronutrientCtrl {
 				jsonObject.put("addedSugar", row[6]);
 				jsonObject.put("fat", row[7]);
 				jsonObject.put("saturatedFat", row[8]);
-				jsonObject.put("trans", row[9]);
+				jsonObject.put("transFat", row[9]);
 				jsonObject.put("fiber", row[10]);
 				jsonObject.put("sodium", row[11]);
 				json.add(jsonObject);
@@ -212,7 +212,7 @@ public class MacronutrientCtrl {
 			ma.setAddedSugar(null);
 			ma.setFat(null);
 			ma.setSaturatedFat(null);
-			ma.setTrans(null);
+			ma.setTransFat(null);
 			ma.setFiber(null);
 			ma.setSodium(null);
 			ma.setPortion(null);
@@ -234,7 +234,7 @@ public class MacronutrientCtrl {
 			ma.setAddedSugar(null);
 			ma.setFat(null);
 			ma.setSaturatedFat(null);
-			ma.setTrans(null);
+			ma.setTransFat(null);
 			ma.setFiber(null);
 			ma.setSodium(null);
 			ma.setPortion(null);
@@ -255,7 +255,7 @@ public class MacronutrientCtrl {
 			jsonObject.put("addedSugar", null);
 			jsonObject.put("fat", null);
 			jsonObject.put("saturatedFat", null);
-			jsonObject.put("trans", null);
+			jsonObject.put("transFat", null);
 			jsonObject.put("fiber", null);
 			jsonObject.put("sodium", null);
 			return jsonObject;

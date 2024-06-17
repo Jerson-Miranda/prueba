@@ -34,17 +34,17 @@ public class Macronutrient {
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal sugar;
 	
-	@Column(nullable = false, precision = 10, scale = 2)
+	@Column(name = "added_suggar", nullable = false, precision = 10, scale = 2)
 	private BigDecimal addedSugar;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal fat;
 	
-	@Column(nullable = false, precision = 10, scale = 2)
+	@Column(name = "saturated_fat", nullable = false, precision = 10, scale = 2)
 	private BigDecimal saturatedFat;
 	
-	@Column(nullable = false, precision = 10, scale = 2)
-	private BigDecimal trans;
+	@Column(name = "trans_fat", nullable = false, precision = 10, scale = 2)
+	private BigDecimal transFat;
 	
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal fiber;

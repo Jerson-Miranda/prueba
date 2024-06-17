@@ -21,12 +21,12 @@ public class ScheduleDiet {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_schedule_diet")
-	private Long idScheduleDite;
+	private Long idScheduleDiet;
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, columnDefinition = "TIME(1)")
 	private LocalTime time;
 	
-	@Column(name = "is_checked", nullable = false)
+	@Column(name = "is_checked", nullable = false, columnDefinition = "TINYINT(1)")
 	private Boolean isChecked;
 	
 	@ManyToOne

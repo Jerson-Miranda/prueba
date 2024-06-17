@@ -65,7 +65,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "SUM(ma.addedSugar * ri.amount / 100) AS total_addedSugar, " +
                         "SUM(ma.fat * ri.amount / 100) AS total_fat, " +
                         "SUM(ma.saturatedFat * ri.amount / 100) AS total_saturatedFat, " +
-                        "SUM(ma.trans * ri.amount / 100) AS total_trans, " +
+                        "SUM(ma.transFat * ri.amount / 100) AS total_transFat, " +
                         "SUM(ma.fiber * ri.amount / 100) AS total_fiber, " +
                         "SUM(ma.sodium * ri.amount / 100) AS total_sodium " +
                         "FROM Macronutrient ma " +
@@ -92,7 +92,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "WHEN :macronutrient = 'addedSugar' THEN SUM(ma.addedSugar * ri.amount / 100) " +
                         "WHEN :macronutrient = 'fat' THEN SUM(ma.fat * ri.amount / 100) " +
                         "WHEN :macronutrient = 'saturatedFat' THEN SUM(ma.saturatedFat * ri.amount / 100) " +
-                        "WHEN :macronutrient = 'trans' THEN SUM(ma.trans * ri.amount / 100) " +
+                        "WHEN :macronutrient = 'transFat' THEN SUM(ma.transFat * ri.amount / 100) " +
                         "WHEN :macronutrient = 'fiber' THEN SUM(ma.fiber * ri.amount / 100) " +
                         "WHEN :macronutrient = 'sodium' THEN SUM(ma.sodium * ri.amount / 100) " +
                         "ELSE 0 END DESC " +
@@ -115,7 +115,7 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "WHEN :macronutrient = 'addedSugar' THEN SUM(ma.addedSugar * ri.amount / 100) " +
                         "WHEN :macronutrient = 'fat' THEN SUM(ma.fat * ri.amount / 100) " +
                         "WHEN :macronutrient = 'saturatedFat' THEN SUM(ma.saturatedFat * ri.amount / 100) " +
-                        "WHEN :macronutrient = 'trans' THEN SUM(ma.trans * ri.amount / 100) " +
+                        "WHEN :macronutrient = 'transFat' THEN SUM(ma.transFat * ri.amount / 100) " +
                         "WHEN :macronutrient = 'fiber' THEN SUM(ma.fiber * ri.amount / 100) " +
                         "WHEN :macronutrient = 'sodium' THEN SUM(ma.sodium * ri.amount / 100) " +
                         "ELSE 0 END ASC " +
@@ -125,12 +125,26 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
         // Get vitamins by recipe
         @Query("SELECT " +
                         "SUM(v.vitaminA * ri.amount / 100) AS total_a, " +
-                        "SUM(v.vitaminB * ri.amount / 100) AS total_b, " +
+                        "SUM(vb.vitaminB1 * ri.amount / 100) AS total_b1, " +
+                        "SUM(vb.vitaminB2 * ri.amount / 100) AS total_b2, " +
+                        "SUM(vb.vitaminB3 * ri.amount / 100) AS total_b3, " +
+                        "SUM(vb.vitaminB4 * ri.amount / 100) AS total_b4, " +
+                        "SUM(vb.vitaminB5 * ri.amount / 100) AS total_b5, " +
+                        "SUM(vb.vitaminB6 * ri.amount / 100) AS total_b6, " +
+                        "SUM(vb.vitaminB7 * ri.amount / 100) AS total_b7, " +
+                        "SUM(vb.vitaminB8 * ri.amount / 100) AS total_b8, " +
+                        "SUM(vb.vitaminB9 * ri.amount / 100) AS total_b9, " +
+                        "SUM(vb.vitaminB12 * ri.amount / 100) AS total_b12, " +
                         "SUM(v.vitaminC * ri.amount / 100) AS total_c, " +
-                        "SUM(v.vitaminD * ri.amount / 100) AS total_d, " +
+                        "SUM(vd.vitaminD2 * ri.amount / 100) AS total_d2, " +
+                        "SUM(vd.vitaminD3 * ri.amount / 100) AS total_d3, " +
                         "SUM(v.vitaminE * ri.amount / 100) AS total_e, " +
-                        "SUM(v.vitaminK * ri.amount / 100) AS total_k " +
+                        "SUM(vk.vitaminK1 * ri.amount / 100) AS total_k1, " +
+                        "SUM(vk.vitaminK2 * ri.amount / 100) AS total_k2 " +
                         "FROM Vitamin v " +
+                        "JOIN v.vitaminB vb " +
+                        "JOIN v.vitaminD vd " +
+                        "JOIN v.vitaminK vk " +
                         "JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
                         "JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
                         "JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
@@ -147,14 +161,28 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "JOIN i.commonIngredient ci " +
                         "JOIN ci.micronutrient mi " +
                         "JOIN mi.vitamin v " +
+                        "JOIN v.vitaminB vb " +
+                        "JOIN v.vitaminD vd " +
+                        "JOIN v.vitaminK vk " +
                         "GROUP BY r.idRecipe " +
                         "ORDER BY CASE " +
                         "WHEN :vitamin = 'a' THEN SUM(v.vitaminA * ri.amount / 100) " +
-                        "WHEN :vitamin = 'b' THEN SUM(v.vitaminB * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b1' THEN SUM(vb.vitaminB1 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b2' THEN SUM(vb.vitaminB2 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b3' THEN SUM(vb.vitaminB3 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b4' THEN SUM(vb.vitaminB4 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b5' THEN SUM(vb.vitaminB5 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b6' THEN SUM(vb.vitaminB6 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b7' THEN SUM(vb.vitaminB7 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b8' THEN SUM(vb.vitaminB8 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b9' THEN SUM(vb.vitaminB9 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b12' THEN SUM(vb.vitaminB12 * ri.amount / 100) " +
                         "WHEN :vitamin = 'c' THEN SUM(v.vitaminC * ri.amount / 100) " +
-                        "WHEN :vitamin = 'd' THEN SUM(v.vitaminD * ri.amount / 100) " +
+                        "WHEN :vitamin = 'd2' THEN SUM(vd.vitaminD2 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'd3' THEN SUM(vd.vitaminD3 * ri.amount / 100) " +
                         "WHEN :vitamin = 'e' THEN SUM(v.vitaminE * ri.amount / 100) " +
-                        "WHEN :vitamin = 'k' THEN SUM(v.vitaminK * ri.amount / 100) " +
+                        "WHEN :vitamin = 'k1' THEN SUM(vk.vitaminK1 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'k2' THEN SUM(vk.vitaminK2 * ri.amount / 100) " +
                         "ELSE 0 END DESC " +
                         "LIMIT 1")
         public Recipe getRecipeWithMaxVitamin(@Param("vitamin") String vitamin);
@@ -167,14 +195,28 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "JOIN i.commonIngredient ci " +
                         "JOIN ci.micronutrient mi " +
                         "JOIN mi.vitamin v " +
+                        "JOIN v.vitaminB vb " +
+                        "JOIN v.vitaminD vd " +
+                        "JOIN v.vitaminK vk " +
                         "GROUP BY r.idRecipe " +
                         "ORDER BY CASE " +
                         "WHEN :vitamin = 'a' THEN SUM(v.vitaminA * ri.amount / 100) " +
-                        "WHEN :vitamin = 'b' THEN SUM(v.vitaminB * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b1' THEN SUM(vb.vitaminB1 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b2' THEN SUM(vb.vitaminB2 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b3' THEN SUM(vb.vitaminB3 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b4' THEN SUM(vb.vitaminB4 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b5' THEN SUM(vb.vitaminB5 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b6' THEN SUM(vb.vitaminB6 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b7' THEN SUM(vb.vitaminB7 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b8' THEN SUM(vb.vitaminB8 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b9' THEN SUM(vb.vitaminB9 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'b12' THEN SUM(vb.vitaminB12 * ri.amount / 100) " +
                         "WHEN :vitamin = 'c' THEN SUM(v.vitaminC * ri.amount / 100) " +
-                        "WHEN :vitamin = 'd' THEN SUM(v.vitaminD * ri.amount / 100) " +
+                        "WHEN :vitamin = 'd2' THEN SUM(vd.vitaminD2 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'd3' THEN SUM(vd.vitaminD3 * ri.amount / 100) " +
                         "WHEN :vitamin = 'e' THEN SUM(v.vitaminE * ri.amount / 100) " +
-                        "WHEN :vitamin = 'k' THEN SUM(v.vitaminK * ri.amount / 100) " +
+                        "WHEN :vitamin = 'k1' THEN SUM(vk.vitaminK1 * ri.amount / 100) " +
+                        "WHEN :vitamin = 'k2' THEN SUM(vk.vitaminK2 * ri.amount / 100) " +
                         "ELSE 0 END ASC " +
                         "LIMIT 1")
         public Recipe getRecipeWithMinVitamin(@Param("vitamin") String vitamin);
@@ -324,12 +366,14 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
         public List<Recipe> getFavoriteRecipes();
 
         // Get recipes by diet
-        @Query("SELECT r " +
-                        "FROM Recipe r " +
-                        "JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+        @Query("SELECT " +
+                        "dr.recipe.idRecipe, " +
+                        "SUM(dr.portion) AS portion " +
+                        "FROM DietRecipe dr " +
                         "JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
-                        "WHERE d.idDiet = :idDiet")
-        public List<Recipe> getRecipesByDiet(@Param("idDiet") Long idDiet);
+                        "WHERE d.idDiet = :idDiet " +
+                        "GROUP BY dr.recipe.idRecipe")
+        public List<Object> getRecipesByDiet(@Param("idDiet") Long idDiet);
 
         // Get recipes by diet between dates
         @Query("SELECT " +

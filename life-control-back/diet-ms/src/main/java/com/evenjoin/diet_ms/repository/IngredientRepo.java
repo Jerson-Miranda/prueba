@@ -45,7 +45,7 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"WHEN :nutrient = 'addedSugar' THEN ma.addedSugar " +
 			"WHEN :nutrient = 'fat' THEN ma.fat " +
 			"WHEN :nutrient = 'saturatedFat' THEN ma.saturatedFat " +
-			"WHEN :nutrient = 'trans' THEN ma.trans " +
+			"WHEN :nutrient = 'transFat' THEN ma.transFat " +
 			"WHEN :nutrient = 'fiber' THEN ma.fiber " +
 			"WHEN :nutrient = 'sodium' THEN ma.sodium " +
 			"ELSE 0 END DESC " +
@@ -65,7 +65,7 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"WHEN :nutrient = 'addedSugar' THEN ma.addedSugar " +
 			"WHEN :nutrient = 'fat' THEN ma.fat " +
 			"WHEN :nutrient = 'saturatedFat' THEN ma.saturatedFat " +
-			"WHEN :nutrient = 'trans' THEN ma.trans " +
+			"WHEN :nutrient = 'transFat' THEN ma.transFat " +
 			"WHEN :nutrient = 'fiber' THEN ma.fiber " +
 			"WHEN :nutrient = 'sodium' THEN ma.sodium " +
 			"ELSE 0 END ASC " +

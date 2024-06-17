@@ -170,7 +170,7 @@ public class RecipeSvc implements IRecipeSvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Recipe> getRecipesByDiet(Long idDiet) {
+	public List<Object> getRecipesByDiet(Long idDiet) {
 		return recipeRepo.getRecipesByDiet(idDiet);
 	}
 

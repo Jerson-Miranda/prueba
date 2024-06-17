@@ -21,12 +21,26 @@ public interface VitaminRepo extends JpaRepository<Vitamin, Long> {
 	// Get vitamins by recipe
 	@Query("SELECT " +
 			"SUM((v.vitaminA * ri.amount) / 100) AS total_a, " +
-			"SUM((v.vitaminB * ri.amount) / 100) AS total_b, " +
+			"SUM((vb.vitaminB1 * ri.amount) / 100) AS total_b1, " +
+			"SUM((vb.vitaminB2 * ri.amount) / 100) AS total_b2, " +
+			"SUM((vb.vitaminB3 * ri.amount) / 100) AS total_b3, " +
+			"SUM((vb.vitaminB4 * ri.amount) / 100) AS total_b4, " +
+			"SUM((vb.vitaminB5 * ri.amount) / 100) AS total_b5, " +
+			"SUM((vb.vitaminB6 * ri.amount) / 100) AS total_b6, " +
+			"SUM((vb.vitaminB7 * ri.amount) / 100) AS total_b7, " +
+			"SUM((vb.vitaminB8 * ri.amount) / 100) AS total_b8, " +
+			"SUM((vb.vitaminB9 * ri.amount) / 100) AS total_b9, " +
+			"SUM((vb.vitaminB12 * ri.amount) / 100) AS total_b12, " +
 			"SUM((v.vitaminC * ri.amount) / 100) AS total_c, " +
-			"SUM((v.vitaminD * ri.amount) / 100) AS total_d, " +
+			"SUM((vd.vitaminD2 * ri.amount) / 100) AS total_d2, " +
+			"SUM((vd.vitaminD3 * ri.amount) / 100) AS total_d3, " +
 			"SUM((v.vitaminE * ri.amount) / 100) AS total_e, " +
-			"SUM((v.vitaminK * ri.amount) / 100) AS total_k " +
+			"SUM((vk.vitaminK1 * ri.amount) / 100) AS total_k1, " +
+			"SUM((vk.vitaminK2 * ri.amount) / 100) AS total_k2 " +
 			"FROM Vitamin v " +
+			"JOIN v.vitaminB vb " +
+			"JOIN v.vitaminD vd " +
+			"JOIN v.vitaminK vk " +
 			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
 			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
@@ -37,13 +51,27 @@ public interface VitaminRepo extends JpaRepository<Vitamin, Long> {
 
 	// Get vitamins by diet
 	@Query("SELECT " +
-			"SUM((v.vitaminA * ri.amount / 100) * dr.portion) AS total_a, " +
-			"SUM((v.vitaminB * ri.amount / 100) * dr.portion) AS total_b, " +
-			"SUM((v.vitaminC * ri.amount / 100) * dr.portion) AS total_c, " +
-			"SUM((v.vitaminD * ri.amount / 100) * dr.portion) AS total_d, " +
-			"SUM((v.vitaminE * ri.amount / 100) * dr.portion) AS total_e, " +
-			"SUM((v.vitaminK * ri.amount / 100) * dr.portion) AS total_k " +
+			"SUM(((v.vitaminA * ri.amount) / 100) * dr.portion) AS total_a, " +
+			"SUM(((vb.vitaminB1 * ri.amount) / 100) * dr.portion) AS total_b1, " +
+			"SUM(((vb.vitaminB2 * ri.amount) / 100) * dr.portion) AS total_b2, " +
+			"SUM(((vb.vitaminB3 * ri.amount) / 100) * dr.portion) AS total_b3, " +
+			"SUM(((vb.vitaminB4 * ri.amount) / 100) * dr.portion) AS total_b4, " +
+			"SUM(((vb.vitaminB5 * ri.amount) / 100) * dr.portion) AS total_b5, " +
+			"SUM(((vb.vitaminB6 * ri.amount) / 100) * dr.portion) AS total_b6, " +
+			"SUM(((vb.vitaminB7 * ri.amount) / 100) * dr.portion) AS total_b7, " +
+			"SUM(((vb.vitaminB8 * ri.amount) / 100) * dr.portion) AS total_b8, " +
+			"SUM(((vb.vitaminB9 * ri.amount) / 100) * dr.portion) AS total_b9, " +
+			"SUM(((vb.vitaminB12 * ri.amount) / 100) * dr.portion) AS total_b12, " +
+			"SUM(((v.vitaminC * ri.amount) / 100) * dr.portion) AS total_c, " +
+			"SUM(((vd.vitaminD2 * ri.amount) / 100) * dr.portion) AS total_d2, " +
+			"SUM(((vd.vitaminD3 * ri.amount) / 100) * dr.portion) AS total_d3, " +
+			"SUM(((v.vitaminE * ri.amount) / 100) * dr.portion) AS total_e, " +
+			"SUM(((vk.vitaminK1 * ri.amount) / 100) * dr.portion) AS total_k1, " +
+			"SUM(((vk.vitaminK2 * ri.amount) / 100) * dr.portion) AS total_k2 " +
 			"FROM Vitamin v " +
+			"JOIN v.vitaminB vb " +
+			"JOIN v.vitaminD vd " +
+			"JOIN v.vitaminK vk " +
 			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
 			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +
@@ -56,13 +84,27 @@ public interface VitaminRepo extends JpaRepository<Vitamin, Long> {
 
 	// Get vitamins by diet between dates
 	@Query("SELECT d.idDiet, d.date, " +
-			"SUM((v.vitaminA * ri.amount / 100) * dr.portion) AS total_a, " +
-			"SUM((v.vitaminB * ri.amount / 100) * dr.portion) AS total_b, " +
-			"SUM((v.vitaminC * ri.amount / 100) * dr.portion) AS total_c, " +
-			"SUM((v.vitaminD * ri.amount / 100) * dr.portion) AS total_d, " +
-			"SUM((v.vitaminE * ri.amount / 100) * dr.portion) AS total_e, " +
-			"SUM((v.vitaminK * ri.amount / 100) * dr.portion) AS total_k " +
+			"SUM(((v.vitaminA * ri.amount) / 100) * dr.portion) AS total_a, " +
+			"SUM(((vb.vitaminB1 * ri.amount) / 100) * dr.portion) AS total_b1, " +
+			"SUM(((vb.vitaminB2 * ri.amount) / 100) * dr.portion) AS total_b2, " +
+			"SUM(((vb.vitaminB3 * ri.amount) / 100) * dr.portion) AS total_b3, " +
+			"SUM(((vb.vitaminB4 * ri.amount) / 100) * dr.portion) AS total_b4, " +
+			"SUM(((vb.vitaminB5 * ri.amount) / 100) * dr.portion) AS total_b5, " +
+			"SUM(((vb.vitaminB6 * ri.amount) / 100) * dr.portion) AS total_b6, " +
+			"SUM(((vb.vitaminB7 * ri.amount) / 100) * dr.portion) AS total_b7, " +
+			"SUM(((vb.vitaminB8 * ri.amount) / 100) * dr.portion) AS total_b8, " +
+			"SUM(((vb.vitaminB9 * ri.amount) / 100) * dr.portion) AS total_b9, " +
+			"SUM(((vb.vitaminB12 * ri.amount) / 100) * dr.portion) AS total_b12, " +
+			"SUM(((v.vitaminC * ri.amount) / 100) * dr.portion) AS total_c, " +
+			"SUM(((vd.vitaminD2 * ri.amount) / 100) * dr.portion) AS total_d2, " +
+			"SUM(((vd.vitaminD3 * ri.amount) / 100) * dr.portion) AS total_d3, " +
+			"SUM(((v.vitaminE * ri.amount) / 100) * dr.portion) AS total_e, " +
+			"SUM(((vk.vitaminK1 * ri.amount) / 100) * dr.portion) AS total_k1, " +
+			"SUM(((vk.vitaminK2 * ri.amount) / 100) * dr.portion) AS total_k2 " +
 			"FROM Vitamin v " +
+			"JOIN v.vitaminB vb " +
+			"JOIN v.vitaminD vd " +
+			"JOIN v.vitaminK vk " +
 			"JOIN Micronutrient mi ON mi.vitamin.idVitamin = v.idVitamin " +
 			"JOIN CommonIngredient ci ON ci.micronutrient.idMicronutrient = mi.idMicronutrient " +
 			"JOIN Ingredient i ON i.commonIngredient.idCommonIngredient = ci.idCommonIngredient " +

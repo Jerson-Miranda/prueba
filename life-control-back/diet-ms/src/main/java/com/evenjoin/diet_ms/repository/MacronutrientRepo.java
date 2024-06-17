@@ -29,7 +29,7 @@ public interface MacronutrientRepo extends JpaRepository<Macronutrient, Long> {
 			"SUM((ma.addedSugar * ri.amount) / 100) AS total_added_sugar, " +
 			"SUM((ma.fat * ri.amount) / 100) AS total_fat, " +
 			"SUM((ma.saturatedFat * ri.amount) / 100) AS total_saturated_fat, " +
-			"SUM((ma.trans * ri.amount) / 100) AS total_trans, " +
+			"SUM((ma.transFat * ri.amount) / 100) AS total_transFat, " +
 			"SUM((ma.fiber * ri.amount) / 100) AS total_fiber, " +
 			"SUM((ma.sodium * ri.amount) / 100) AS total_sodium " +
 			"FROM Macronutrient ma " +
@@ -49,7 +49,7 @@ public interface MacronutrientRepo extends JpaRepository<Macronutrient, Long> {
 			"SUM((ma.addedSugar * ri.amount / 100) * dr.portion) AS total_added_sugar, " +
 			"SUM((ma.fat * ri.amount / 100) * dr.portion) AS total_fat, " +
 			"SUM((ma.saturatedFat * ri.amount / 100) * dr.portion) AS total_saturated_fat, " +
-			"SUM((ma.trans * ri.amount / 100) * dr.portion) AS total_trans, " +
+			"SUM((ma.transFat * ri.amount / 100) * dr.portion) AS total_transFat, " +
 			"SUM((ma.fiber * ri.amount / 100) * dr.portion) AS total_fiber, " +
 			"SUM((ma.sodium * ri.amount / 100) * dr.portion) AS total_sodium " +
 			"FROM Macronutrient ma " +
@@ -71,7 +71,7 @@ public interface MacronutrientRepo extends JpaRepository<Macronutrient, Long> {
 			"SUM((ma.addedSugar * ri.amount / 100) * dr.portion) AS total_added_sugar, " +
 			"SUM((ma.fat * ri.amount / 100) * dr.portion) AS total_fat, " +
 			"SUM((ma.saturatedFat * ri.amount / 100) * dr.portion) AS total_saturated_fat, " +
-			"SUM((ma.trans * ri.amount / 100) * dr.portion) AS total_trans, " +
+			"SUM((ma.transFat * ri.amount / 100) * dr.portion) AS total_transFat, " +
 			"SUM((ma.fiber * ri.amount / 100) * dr.portion) AS total_fiber, " +
 			"SUM((ma.sodium * ri.amount / 100) * dr.portion) AS total_sodium " +
 			"FROM Macronutrient ma " +

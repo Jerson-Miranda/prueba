@@ -38,6 +38,7 @@ public class CategoryCtrl {
 
 	// Get all categories
 	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getListObjectCB")
+	@TimeLimiter(name = "categoryBreaker")
 	@GetMapping("/category/all")
 	@ResponseStatus(code = HttpStatus.OK)
 	public CompletableFuture<List<Category>> getCategories() {

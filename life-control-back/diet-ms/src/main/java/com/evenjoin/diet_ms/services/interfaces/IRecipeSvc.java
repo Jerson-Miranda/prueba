@@ -32,7 +32,7 @@ public interface IRecipeSvc {
 	public Recipe getRecipeWithMaxTime();
 	public Recipe getRecipeWithMinTime();
 	public List<Recipe> getFavoriteRecipes();
-	public List<Recipe> getRecipesByDiet(Long idDiet);
+	public List<Object> getRecipesByDiet(Long idDiet);
 	public List<Object> getRecipesByDietRange(Date startDate, Date endDate);
 
 

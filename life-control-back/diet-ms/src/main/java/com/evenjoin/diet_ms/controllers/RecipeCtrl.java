@@ -171,7 +171,7 @@ public class RecipeCtrl {
 			jsonObject.put("addedSugar", res[4]);
 			jsonObject.put("fat", res[5]);
 			jsonObject.put("saturatedFat", res[6]);
-			jsonObject.put("trans", res[7]);
+			jsonObject.put("transFat", res[7]);
 			jsonObject.put("fiber", res[8]);
 			jsonObject.put("sodium", res[9]);
 			return jsonObject;
@@ -342,12 +342,23 @@ public class RecipeCtrl {
 	}
 
 	// Get recipes by diet
-	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListObjectCB")
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getListMapRecipeCB")
 	@TimeLimiter(name = "recipeBreaker")
 	@GetMapping("/recipe/diet/{idDiet}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<List<Recipe>> getRecipesByDiet(@PathVariable Long idDiet) {
-		return CompletableFuture.supplyAsync(() -> recipeSvc.getRecipesByDiet(idDiet));
+	public CompletableFuture<List<Map<String, Object>>> getRecipesByDiet(@PathVariable Long idDiet) {
+		return CompletableFuture.supplyAsync(() -> {
+			List<Object> response = recipeSvc.getRecipesByDiet(idDiet);
+			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
+			for (Object res : response) {
+				Object[] row = (Object[]) res;
+				Map<String, Object> jsonObject = new HashMap<String, Object>();
+				jsonObject.put("idRecipe", row[0]);
+				jsonObject.put("portion", row[1]);
+				json.add(jsonObject);
+			}
+			return json;
+		});
 	}
 
 	// Get recipes by diet between dates
@@ -441,7 +452,7 @@ public class RecipeCtrl {
 			jsonObject.put("addedSugar", null);
 			jsonObject.put("fat", null);
 			jsonObject.put("saturatedFat", null);
-			jsonObject.put("trans", null);
+			jsonObject.put("transFat", null);
 			jsonObject.put("fiber", null);
 			jsonObject.put("sodium", null);
 			return jsonObject;
