@@ -12,5 +12,6 @@ public interface ISubcategorySvc {
 	public Integer countSubcategories();
 	public List<Subcategory> getSubcategoriesByRecipeBook(Long idRecipeBook);
 	public List<Subcategory> getSubcategoriesByCategory(Long idCategory);
-	
+	public Subcategory getMaxConsumptionSubcategory();
+	public Subcategory getMinConsumptionSubcategory();
 }

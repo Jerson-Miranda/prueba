@@ -51,4 +51,16 @@ public class CategorySvc implements ICategorySvc{
 		return categoryRepo.getCategoriesByRecipeBook(idRecipeBook);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Category getMaxConsumptionCategory() {
+		return categoryRepo.getMaxConsumptionCategory();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Category getMinConsumptionCategory() {
+		return categoryRepo.getMinConsumptionCategory();
+	}
+
 }

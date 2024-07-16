@@ -22,4 +22,7 @@ public interface IIngredientSvc {
 	public List<Ingredient> getFavoriteIngredients();
 	public List<Object> getIngredientsByDiet(Long idDiet);
 	public List<Object> getIngredientsByDietRange(Date startDate, Date endDate);
+	public Ingredient getMaxConsumptionIngredient();
+	public Ingredient getMinConsumptionIngredient();
+
 }

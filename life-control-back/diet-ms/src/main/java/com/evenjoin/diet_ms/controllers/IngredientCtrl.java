@@ -244,6 +244,24 @@ public class IngredientCtrl {
 		});
 	}
 
+	// Get maximum comsumption ingredient
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/max-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Ingredient> getMaxConsumptionIngredient() {
+		return CompletableFuture.supplyAsync(() -> ingredientSvc.getMaxConsumptionIngredient());
+	}
+
+	// Get minimum comsumption ingredient
+	@CircuitBreaker(name = "ingredientBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "ingredientBreaker")
+	@GetMapping("/ingredient/min-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Ingredient> getMinConsumptionIngredient() {
+		return CompletableFuture.supplyAsync(() -> ingredientSvc.getMinConsumptionIngredient());
+	}
+
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled ingredient breaker" + t));

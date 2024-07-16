@@ -134,4 +134,31 @@ public interface IngredientRepo extends JpaRepository<Ingredient, Long> {
 			"GROUP BY i.idIngredient")
 	public List<Object> getIngredientsByDietRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+	// Get maximum comsumption ingredient
+	@Query("SELECT i " +
+			"FROM Ingredient i " +
+			"JOIN RecipeIngredient ri ON ri.ingredient.idIngredient = i.idIngredient " +
+			"JOIN Recipe r ON r.idRecipe = ri.recipe.idRecipe " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"JOIN ScheduleDiet sd ON sd.diet.idDiet = d.idDiet " +
+			"WHERE sd.isChecked = true " +
+			"GROUP BY i.idIngredient " +
+			"ORDER BY COUNT(sd.isChecked) DESC " +
+			"LIMIT 1")
+	public Ingredient getMaxConsumptionIngredient();
+
+	// Get minimum comsumption ingredient
+	@Query("SELECT i " +
+			"FROM Ingredient i " +
+			"JOIN RecipeIngredient ri ON ri.ingredient.idIngredient = i.idIngredient " +
+			"JOIN Recipe r ON r.idRecipe = ri.recipe.idRecipe " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"JOIN ScheduleDiet sd ON sd.diet.idDiet = d.idDiet " +
+			"WHERE sd.isChecked = true " +
+			"GROUP BY i.idIngredient " +
+			"ORDER BY COUNT(sd.isChecked) ASC " +
+			"LIMIT 1")
+	public Ingredient getMinConsumptionIngredient();
 }

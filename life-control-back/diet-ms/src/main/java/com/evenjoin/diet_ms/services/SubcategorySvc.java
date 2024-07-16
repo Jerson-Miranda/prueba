@@ -1,11 +1,9 @@
 package com.evenjoin.diet_ms.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.evenjoin.diet_ms.entity.Subcategory;
 import com.evenjoin.diet_ms.repository.SubcategoryRepo;
 import com.evenjoin.diet_ms.services.interfaces.ISubcategorySvc;
@@ -58,4 +56,15 @@ public class SubcategorySvc implements ISubcategorySvc {
 		return subcategoryRepo.getSubcategoriesByCategory(idCategory);
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public Subcategory getMaxConsumptionSubcategory() {
+		return subcategoryRepo.getMaxConsumptionSubcategory();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Subcategory getMinConsumptionSubcategory() {
+		return subcategoryRepo.getMinConsumptionSubcategory();
+	}
 }

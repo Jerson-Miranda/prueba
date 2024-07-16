@@ -11,4 +11,6 @@ public interface ICategorySvc {
 	public void deleteCategory(Long idCategory);
 	public List<Category> getCategoriesByRecipeBook(Long idRecipeBook);
 	public int countCategories();
+	public Category getMaxConsumptionCategory();
+	public Category getMinConsumptionCategory();
 }

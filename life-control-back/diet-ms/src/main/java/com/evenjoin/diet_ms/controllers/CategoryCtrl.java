@@ -85,6 +85,24 @@ public class CategoryCtrl {
 	public CompletableFuture<Void> deleteCategory(@PathVariable Long idCategory) {
 		return CompletableFuture.runAsync(() -> categorySvc.deleteCategory(idCategory));
 	}
+
+	// Get maximum comsumption category
+	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "categoryBreaker")
+	@GetMapping("/category/max-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Category> getMaxConsumptionCategory() {
+		return CompletableFuture.supplyAsync(() -> categorySvc.getMaxConsumptionCategory());
+	}
+
+	// Get minimum comsumption category
+	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "categoryBreaker")
+	@GetMapping("/category/min-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Category> getMinConsumptionCategory() {
+		return CompletableFuture.supplyAsync(() -> categorySvc.getMinConsumptionCategory());
+	}
 	
 	// Count categories
 	@CircuitBreaker(name = "categoryBreaker", fallbackMethod = "getMapIntegerCB")

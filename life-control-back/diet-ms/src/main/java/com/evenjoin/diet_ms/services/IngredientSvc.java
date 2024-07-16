@@ -3,11 +3,9 @@ package com.evenjoin.diet_ms.services;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.evenjoin.diet_ms.entity.Ingredient;
 import com.evenjoin.diet_ms.repository.IngredientRepo;
 import com.evenjoin.diet_ms.services.interfaces.IIngredientSvc;
@@ -106,6 +104,18 @@ public class IngredientSvc implements IIngredientSvc {
 	@Transactional(readOnly = true)
 	public List<Object> getIngredientsByDietRange(Date startDate, Date endDate) {
 		return ingredientRepo.getIngredientsByDietRange(startDate, endDate);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Ingredient getMaxConsumptionIngredient() {
+		return ingredientRepo.getMaxConsumptionIngredient();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Ingredient getMinConsumptionIngredient() {
+		return ingredientRepo.getMinConsumptionIngredient();
 	}
 	
 }

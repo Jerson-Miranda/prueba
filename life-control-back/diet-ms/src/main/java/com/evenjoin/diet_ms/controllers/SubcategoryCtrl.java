@@ -116,6 +116,24 @@ public class SubcategoryCtrl {
 		return CompletableFuture.supplyAsync(() -> subcategorySvc.getSubcategoriesByCategory(idCategory));
 	}
 
+	// Get maximum comsumption subcategory
+	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "subcategoryBreaker")
+	@GetMapping("/subcategory/max-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Subcategory> getMaxConsumptionSubcategory() {
+		return CompletableFuture.supplyAsync(() -> subcategorySvc.getMaxConsumptionSubcategory());
+	}
+
+	// Get minimum comsumption subcategory
+	@CircuitBreaker(name = "subcategoryBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "subcategoryBreaker")
+	@GetMapping("/subcategory/min-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Subcategory> getMinConsumptionSubCategory() {
+		return CompletableFuture.supplyAsync(() -> subcategorySvc.getMinConsumptionSubcategory());
+	}
+
 	// (CircuitBreaker) Get void circuit breaker
 	public CompletableFuture<Void> getVoidCB(Throwable t) {
 		return CompletableFuture.runAsync(() -> logger.error("Enabled subcategory breaker" + t));
