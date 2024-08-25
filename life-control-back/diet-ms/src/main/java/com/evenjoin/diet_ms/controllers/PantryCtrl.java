@@ -88,11 +88,11 @@ public class PantryCtrl {
 	// Get stock and expiration date by ingredient
 	@CircuitBreaker(name = "pantryBreaker", fallbackMethod = "getListMapObjectCB")
 	@TimeLimiter(name = "pantryBreaker")
-	@GetMapping("/pantry/stock-expiration-date/{barcode}")
+	@GetMapping("/pantry/stock-expiration-date/{idIngredient}")
 	@ResponseStatus(code = HttpStatus.OK)
-	public CompletableFuture<List<Map<String, Object>>> getStockEDByIngredient(@PathVariable String barcode) {
+	public CompletableFuture<List<Map<String, Object>>> getStockEDByIngredient(@PathVariable Long idIngredient) {
 		return CompletableFuture.supplyAsync(() -> {
-			List<Object> response = pantrySvc.getStockEDByIngredient(barcode);
+			List<Object> response = pantrySvc.getStockEDByIngredient(idIngredient);
 			List<Map<String, Object>> json = new ArrayList<Map<String, Object>>();
 			for (Object obj : response) {
 	            Object[] row = (Object[]) obj;

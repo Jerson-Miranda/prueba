@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.evenjoin.diet_ms.entity.Category;
 import com.evenjoin.diet_ms.entity.Recipe;
 import com.evenjoin.diet_ms.services.RecipeSvc;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -389,6 +391,24 @@ public class RecipeCtrl {
 			}
 			return json;
 		});
+	}
+
+	// Get maximum comsumption recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/max-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getMaxConsumptionRecipe() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getMaxConsumptionRecipe());
+	}
+
+	// Get minimum comsumption recipe
+	@CircuitBreaker(name = "recipeBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBreaker")
+	@GetMapping("/recipe/min-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<Recipe> getMinConsumptionRecipe() {
+		return CompletableFuture.supplyAsync(() -> recipeSvc.getMinConsumptionRecipe());
 	}
 
 	// (CircuitBreaker) Get void circuit breaker

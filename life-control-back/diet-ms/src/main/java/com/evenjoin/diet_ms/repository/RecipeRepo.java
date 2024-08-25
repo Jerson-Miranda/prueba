@@ -385,4 +385,26 @@ public interface RecipeRepo extends JpaRepository<Recipe, Long> {
                         "GROUP BY dr.recipe.idRecipe")
         public List<Object> getRecipesByDietRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+        // Get maximum comsumption recipe
+	@Query("SELECT r " +
+			"FROM Recipe r " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"JOIN ScheduleDiet sd ON sd.diet.idDiet = d.idDiet " +
+			"WHERE sd.isChecked = true " +
+			"GROUP BY c.idCategory " +
+			"ORDER BY COUNT(sd.isChecked) DESC")
+	public Recipe getMaxConsumptionRecipe();
+
+	// Get minimum comsumption recipe
+	@Query("SELECT r " +
+			"FROM Recipe r " +
+			"JOIN DietRecipe dr ON dr.recipe.idRecipe = r.idRecipe " +
+			"JOIN Diet d ON d.idDiet = dr.diet.idDiet " +
+			"JOIN ScheduleDiet sd ON sd.diet.idDiet = d.idDiet " +
+			"WHERE sd.isChecked = true " +
+			"GROUP BY c.idCategory " +
+			"ORDER BY COUNT(sd.isChecked) ASC")
+	public Recipe getMinConsumptionRecipe();
+
 }

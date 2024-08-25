@@ -12,5 +12,6 @@ public interface IRecipeBookSvc {
 	public Integer countRecipeBooks();
     public RecipeBook getRecipeBookByRecipe(Long idRecipe);
     public List<RecipeBook> getFavoriteRecipeBooks();
-
+	public RecipeBook getMaxConsumptionRecipeBook();
+	public RecipeBook getMinConsumptionRecipeBook();
 }

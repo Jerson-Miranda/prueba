@@ -57,4 +57,16 @@ public class RecipeBookSvc implements IRecipeBookSvc {
     public List<RecipeBook> getFavoriteRecipeBooks() {
         return recipeBookRepo.getFavoriteRecipeBooks();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RecipeBook getMaxConsumptionRecipeBook() {
+        return recipeBookRepo.getMaxConsumptionRecipeBook();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RecipeBook getMinConsumptionRecipeBook() {
+        return recipeBookRepo.getMinConsumptionRecipeBook();
+    }
 }

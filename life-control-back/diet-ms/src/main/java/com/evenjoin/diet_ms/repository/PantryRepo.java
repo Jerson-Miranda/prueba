@@ -14,7 +14,7 @@ public interface PantryRepo extends JpaRepository<Pantry, Long> {
 	@Query("SELECT p.stock, p.expirationDate " +
 			"FROM Pantry p " +
 			"JOIN p.ingredient i " +
-			"WHERE i.barcode = :barcode")
-	public List<Object> getStockEDByIngredient(@Param("barcode") String barcode);
+			"WHERE i.idIngredient = :idIngredient")
+	public List<Object> getStockEDByIngredient(@Param("idIngredient") Long idIngredient);
 
 }

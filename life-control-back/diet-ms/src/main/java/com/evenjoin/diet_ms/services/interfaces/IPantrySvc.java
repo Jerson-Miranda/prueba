@@ -9,5 +9,5 @@ public interface IPantrySvc {
 	public Pantry getPantry(Long idPantry);
 	public Pantry addPantry(Pantry pantry);
 	public void deletePantry(Long idPantry);
-	public List<Object> getStockEDByIngredient(String barcode);
+	public List<Object> getStockEDByIngredient(Long idIngredient);
 }

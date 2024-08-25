@@ -119,6 +119,24 @@ public class RecipeBookCtrl {
         return CompletableFuture.supplyAsync(() -> recipeBookSvc.getFavoriteRecipeBooks());
     }
 
+    // Get maximum comsumption recipe book
+	@CircuitBreaker(name = "recipeBookBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBookBreaker")
+	@GetMapping("/recipe-book/max-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<RecipeBook> getMaxConsumptionRecipeBook() {
+		return CompletableFuture.supplyAsync(() -> recipeBookSvc.getMaxConsumptionRecipeBook());
+	}
+
+	// Get minimum comsumption recipe book
+	@CircuitBreaker(name = "recipeBookBreaker", fallbackMethod = "getObjectCB")
+	@TimeLimiter(name = "recipeBookBreaker")
+	@GetMapping("/recipe-book/min-consumption")
+	@ResponseStatus(code = HttpStatus.OK)
+	public CompletableFuture<RecipeBook> getMinConsumptionRecipeBook() {
+		return CompletableFuture.supplyAsync(() -> recipeBookSvc.getMinConsumptionRecipeBook());
+	}
+
     // (CircuitBreaker) Get void circuit breaker
     public CompletableFuture<Void> getVoidCB(Throwable t) {
         return CompletableFuture.runAsync(() -> logger.error("Enabled recipe book breaker" + t));

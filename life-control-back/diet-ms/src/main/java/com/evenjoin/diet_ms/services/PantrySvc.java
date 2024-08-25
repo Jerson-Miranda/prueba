@@ -40,8 +40,8 @@ public class PantrySvc implements IPantrySvc {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Object> getStockEDByIngredient(String barcode) {
-		return pantryRepo.getStockEDByIngredient(barcode);
+	public List<Object> getStockEDByIngredient(Long idIngredient) {
+		return pantryRepo.getStockEDByIngredient(idIngredient);
 	}
 	
 }

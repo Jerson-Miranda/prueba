@@ -34,6 +34,7 @@ public interface IRecipeSvc {
 	public List<Recipe> getFavoriteRecipes();
 	public List<Object> getRecipesByDiet(Long idDiet);
 	public List<Object> getRecipesByDietRange(Date startDate, Date endDate);
-
+	public Recipe getMaxConsumptionRecipe();
+	public Recipe getMinConsumptionRecipe();
 
 }

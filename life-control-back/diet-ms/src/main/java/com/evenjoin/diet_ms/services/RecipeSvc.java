@@ -180,4 +180,16 @@ public class RecipeSvc implements IRecipeSvc {
 		return recipeRepo.getRecipesByDietRange(startDate, endDate);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getMaxConsumptionRecipe() {
+		return recipeRepo.getMaxConsumptionRecipe();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Recipe getMinConsumptionRecipe() {
+		return recipeRepo.getMinConsumptionRecipe();
+	}
+
 }
